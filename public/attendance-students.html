@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance - Student List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            background-image: linear-gradient(135deg, #f4f4f4 25%, transparent 25%), linear-gradient(225deg, #f4f4f4 25%, transparent 25%), linear-gradient(315deg, #f4f4f4 25%, transparent 25%), linear-gradient(45deg, #f4f4f4 25%, transparent 25%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        nav {
+            background-color: #003366;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        nav .logo {
+            font-size: 28px;
+            font-weight: bold;
+            font-family: Georgia, serif;
+            color: #FFD700;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+            padding-top: 5px;
+        }
+        nav li {
+            margin: 0 15px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #FFD700;
+        }
+        nav button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        nav button:hover {
+            color: #FFD700;
+        }
+        .container {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h2 {
+            font-family: Georgia, serif;
+            color: #003366;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .student-list-section {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-top: 5px solid #003366;
+        }
+        .student-list {
+            list-style: none;
+            padding: 0;
+        }
+        .student-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 5px solid #4CAF50;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .student-name {
+            flex-grow: 1;
+            font-weight: bold;
+            color: #003366;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        .absent-btn {
+            background-color: #ccc;
+            color: black;
+        }
+        .present-btn {
+            background-color: #ccc;
+            color: black;
+        }
+        .absent-btn.active {
+            background-color: #f44336;
+            color: white;
+        }
+        .present-btn.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .submit-btn {
+            background-color: #2196F3;
+            color: white;
+            padding: 15px 30px;
+            margin-top: 30px;
+            width: 100%;
+            font-size: 16px;
+        }
+        .submit-btn:hover {
+            background-color: #1976D2;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #003366;
+            color: white;
+            margin-top: 50px;
+        }
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            nav ul {
+                flex-direction: column;
+                width: 100%;
+            }
+            nav li {
+                margin: 10px 0;
+            }
+            .container {
+                padding: 20px 10px;
+            }
+            .student-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .buttons {
+                margin-top: 10px;
+                flex-direction: column;
+                width: 100%;
+            }
+            .buttons button {
+                width: 100%;
+                margin: 5px 0;
+            }
+            .submit-btn {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="logo">📝 Attendly</div>
+        <ul>
+            <li><a href="faculty-dashboard.html">Dashboard</a></li>
+            <li><button onclick="logout()">Logout</button></li>
+        </ul>
+    </nav>
+
+    <!-- Student List Content -->
+    <div class="container">
+        <div class="student-list-section">
+            <h2 id="class-title">Students in Class</h2>
+            <ul class="student-list" id="student-list">
+                <!-- Students will be displayed here -->
+            </ul>
+            <button class="submit-btn" onclick="submitAttendance()">Submit Attendance</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Attendly - University Attendance Management System</p>
+    </footer>
+
+    <script>
+        // Get class name and subject from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const className = urlParams.get('class');
+        const subjectName = urlParams.get('subject');
+
+        if (!className || !subjectName) {
+            alert('No class or subject selected. Redirecting...');
+            window.location.href = 'mark-attendance.html';
+        }
+
+        let classId, subjectId, students = [];
+        let attendance = {}; // { studentId: 'present' or 'absent' }
+
+        // Load class, subject, and students
+        async function loadData() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Please sign in first.');
+                window.location.href = 'sign-in.html';
+                return;
+            }
+
+            try {
+                // Fetch classes and subjects to get IDs
+                const [classResponse, subjectResponse] = await Promise.all([
+                    fetch('/api/classes', { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch('/api/subjects', { headers: { 'Authorization': `Bearer ${token}` } })
+                ]);
+                if (!classResponse.ok || !subjectResponse.ok) throw new Error('Failed to fetch data');
+
+                const classes = await classResponse.json();
+                const subjects = await subjectResponse.json();
+
+                const selectedClass = classes.find(cls => cls.name === className);
+                const selectedSubject = subjects.find(subj => subj.name === subjectName);
+
+                if (!selectedClass || !selectedSubject) throw new Error('Class or subject not found');
+
+                classId = selectedClass._id;
+                subjectId = selectedSubject._id;
+
+                document.getElementById('class-title').textContent = `Mark Attendance for ${className}`;
+
+                // Fetch students
+                const studentResponse = await fetch(`/api/students?classId=${classId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!studentResponse.ok) throw new Error('Failed to fetch students');
+                students = await studentResponse.json();
+
+                renderStudents();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                alert('Error loading data: ' + error.message);
+            }
+        }
+
+        // Render students
+        function renderStudents() {
+            const studentList = document.getElementById('student-list');
+            studentList.innerHTML = '';
+
+            if (students.length > 0) {
+                students.forEach(student => {
+                    const li = document.createElement('li');
+                    li.className = 'student-item';
+
+                    const nameDiv = document.createElement('div');
+                    nameDiv.className = 'student-name';
+                    nameDiv.textContent = student.name;
+
+                    const buttonsDiv = document.createElement('div');
+                    buttonsDiv.className = 'buttons';
+
+                    const absentBtn = document.createElement('button');
+                    absentBtn.className = 'absent-btn';
+                    absentBtn.textContent = 'Absent';
+                    absentBtn.onclick = () => markAttendance(student._id, 'absent', absentBtn, presentBtn);
+
+                    const presentBtn = document.createElement('button');
+                    presentBtn.className = 'present-btn';
+                    presentBtn.textContent = 'Present';
+                    presentBtn.onclick = () => markAttendance(student._id, 'present', absentBtn, presentBtn);
+
+                    buttonsDiv.appendChild(absentBtn);
+                    buttonsDiv.appendChild(presentBtn);
+
+                    li.appendChild(nameDiv);
+                    li.appendChild(buttonsDiv);
+                    studentList.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.className = 'student-item';
+                li.textContent = 'No students added to this class yet.';
+                studentList.appendChild(li);
+            }
+        }
+
+        // Mark attendance
+        function markAttendance(studentId, status, absentBtn, presentBtn) {
+            attendance[studentId] = status;
+            absentBtn.classList.toggle('active', status === 'absent');
+            presentBtn.classList.toggle('active', status === 'present');
+        }
+
+        // Submit attendance
+        async function submitAttendance() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Please sign in first.');
+                window.location.href = 'signin.html';
+                return;
+            }
+
+            const records = Object.keys(attendance).map(studentId => ({
+                studentId,
+                status: attendance[studentId]
+            }));
+
+            if (records.length === 0) {
+                alert('No attendance marked.');
+                return;
+            }
+
+            if (!confirm('Are you sure you want to submit this attendance?')) return;
+
+            console.log('Submitting attendance with:', { classId, subjectId, records }); // Debug: Sent data
+
+            try {
+                const response = await fetch('/api/attendance', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ classId, subjectId, records })
+                });
+
+                console.log('Response status:', response.status); // Debug: Status code
+                console.log('Response:', response); // Debug: Full response
+
+                if (!response.ok) {
+                    const errorText = await response.text(); // Debug: Error details
+                    console.log('Error response:', errorText);
+                    throw new Error(`Failed to submit attendance: ${response.status} - ${errorText}`);
+                }
+
+                const data = await response.json();
+                alert(`Attendance submitted successfully!\nPresent: ${data.presentCount}\nAbsent: ${data.absentCount}\nDate: ${new Date(data.date).toLocaleString()}`);
+                
+                // Redirect to dashboard after success
+                setTimeout(() => {
+                    window.location.href = 'faculty-dashboard.html';
+                }, 2000); // 2-second delay to show the alert
+
+                attendance = {}; // Reset
+                renderStudents(); // Reset buttons
+            } catch (error) {
+                console.error('Error submitting attendance:', error);
+                alert('Error submitting attendance: ' + error.message);
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'sign-in.html';
+        }
+
+        // Load on page load
+        window.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>

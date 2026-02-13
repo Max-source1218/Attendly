@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Subjects</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            background-image: linear-gradient(135deg, #f4f4f4 25%, transparent 25%), linear-gradient(225deg, #f4f4f4 25%, transparent 25%), linear-gradient(315deg, #f4f4f4 25%, transparent 25%), linear-gradient(45deg, #f4f4f4 25%, transparent 25%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        nav {
+            background-color: #003366;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        nav .logo {
+            font-size: 28px;
+            font-weight: bold;
+            font-family: Georgia, serif;
+            color: #FFD700;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+            padding-top: 5px;
+        }
+        nav li {
+            margin: 0 15px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #FFD700;
+        }
+        nav button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        nav button:hover {
+            color: #FFD700;
+        }
+        .container {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h2 {
+            font-family: Georgia, serif;
+            color: #003366;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .manage-subjects {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-top: 5px solid #003366;
+        }
+        .subject-list {
+            margin-top: 30px;
+        }
+        .subject-item {
+            background-color: #f9f9f9;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 5px solid #4CAF50;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .subject-item h4 {
+            margin: 0 0 15px 0;
+            font-family: Georgia, serif;
+            color: #003366;
+        }
+        .assigned-classes-list {
+            list-style: none;
+            padding: 0;
+        }
+        .assigned-classes-list li {
+            padding: 5px 0;
+        }
+        input {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            width: 250px;
+            font-size: 16px;
+        }
+        .assign-classes {
+            margin-top: 15px;
+        }
+        .assign-classes label {
+            display: block;
+            margin: 8px 0;
+            font-weight: bold;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 0 10px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+        .delete-btn {
+            background-color: #f44336;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #003366;
+            color: white;
+            margin-top: 50px;
+        }
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            nav ul {
+                flex-direction: column;
+                width: 100%;
+            }
+            nav li {
+                margin: 10px 0;
+            }
+            .container {
+                padding: 20px 10px;
+            }
+            input {
+                width: 100%;
+            }
+            .subject-item {
+                padding: 15px;
+            }
+            button {
+                margin: 5px 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="logo">📝 Attendly</div>
+        <ul>
+            <li><a href="faculty-dashboard.html">Dashboard</a></li>
+            <li><a href="manage-classes.html">Manage Classes</a></li>
+            <li><a href="mark-attendance.html">Take Attendance</a></li>
+            <li><a href="view-attendance.html">View All Attendance</a></li>
+            <li><a href="student-record.html">Student Records</a></li>
+            <li><button onclick="logout()">Logout</button></li>
+        </ul>
+    </nav>
+
+    <!-- Manage Subjects Content -->
+    <div class="container">
+        <div class="manage-subjects">
+            <h2>Manage Subjects</h2>
+            <div>
+                <input type="text" id="subject-name" placeholder="Enter subject name (e.g., Mathematics)">
+                <button onclick="createSubject()">Create Subject</button>
+            </div>
+            <div class="subject-list" id="subject-list">
+                <!-- Subjects will be added here dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Attendly - University Attendance Management System</p>
+    </footer>
+
+    <script>
+        let classes = []; // Will be loaded from backend
+        let subjects = []; // Will be loaded from backend
+
+        // Function to create a subject
+        async function createSubject() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Please sign in first.');
+                window.location.href = 'sign-in.html';
+                return;
+            }
+
+            const subjectName = document.getElementById('subject-name').value.trim();
+            if (!subjectName) {
+                alert('Please enter a subject name.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/subjects', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ name: subjectName })
+                });
+
+                if (!response.ok) {
+                    console.log('Create subject response status:', response.status);
+                    throw new Error(`Failed to create subject: ${response.status}`);
+                }
+
+                const data = await response.json(); // Parse response
+                console.log('Created subject:', data);
+
+                document.getElementById('subject-name').value = '';
+                loadData(); // Refresh the list
+            } catch (error) {
+                console.error('Error creating subject:', error);
+                alert('Error creating subject: ' + error.message);
+            }
+        }
+
+        // Function to assign classes to a subject
+        async function assignClasses(subjectId) {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Please sign in first.');
+                window.location.href = 'signin.html';
+                return;
+            }
+
+            const checkboxes = document.querySelectorAll(`input[name="class-${subjectId}"]:checked`);
+            const assignedClasses = Array.from(checkboxes).map(cb => cb.value);
+
+            try {
+                const response = await fetch(`/api/subjects/${subjectId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ assignedClasses })
+                });
+
+                if (!response.ok) {
+                    console.log('Assign classes response status:', response.status);
+                    throw new Error(`Failed to update assignments: ${response.status}`);
+                }
+
+                const data = await response.json(); // Parse response
+                console.log('Updated subject:', data);
+
+                loadData(); // Refresh the list
+            } catch (error) {
+                console.error('Error updating assignments:', error);
+                alert('Error updating assignments: ' + error.message);
+            }
+        }
+
+        // Function to delete a subject
+        async function deleteSubject(subjectId, subjectName) {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Please sign in first.');
+                window.location.href = 'signin.html';
+                return;
+            }
+
+            if (!confirm(`Are you sure you want to delete the subject "${subjectName}"?`)) return;
+
+            try {
+                const response = await fetch(`/api/subjects/${subjectId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) {
+                    console.log('Delete subject response status:', response.status);
+                    throw new Error(`Failed to delete subject: ${response.status}`);
+                }
+
+                const data = await response.json(); // Parse response (if any)
+                console.log('Deleted subject:', data);
+
+                loadData(); // Refresh the list
+            } catch (error) {
+                console.error('Error deleting subject:', error);
+                alert('Error deleting subject: ' + error.message);
+            }
+        }
+
+        // Function to load classes and subjects
+        async function loadData() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Please sign in first.');
+                window.location.href = 'signin.html';
+                return;
+            }
+
+            try {
+                const [classResponse, subjectResponse] = await Promise.all([
+                    fetch('/api/classes', { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch('/api/subjects', { headers: { 'Authorization': `Bearer ${token}` } })
+                ]);
+
+                if (!classResponse.ok || !subjectResponse.ok) {
+                    console.log('Load data response statuses:', classResponse.status, subjectResponse.status);
+                    throw new Error('Failed to fetch data');
+                }
+
+                classes = await classResponse.json();
+                subjects = await subjectResponse.json();
+                renderSubjects();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                alert('Error loading data: ' + error.message);
+            }
+        }
+
+        // Function to render subjects
+        function renderSubjects() {
+            const subjectList = document.getElementById('subject-list');
+            subjectList.innerHTML = ''; // Clear existing list
+
+            subjects.forEach((subj) => {
+                const subjectDiv = document.createElement('div');
+                subjectDiv.className = 'subject-item';
+
+                const subjectTitle = document.createElement('h4');
+                subjectTitle.textContent = subj.name;
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.textContent = 'Delete Subject';
+                deleteBtn.onclick = () => deleteSubject(subj._id, subj.name);
+
+                const assignDiv = document.createElement('div');
+                assignDiv.className = 'assign-classes';
+                assignDiv.innerHTML = '<strong>Assign Classes:</strong>';
+                classes.forEach((cls) => {
+                    const label = document.createElement('label');
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = `class-${subj._id}`;
+                    checkbox.value = cls.name;
+                    checkbox.checked = subj.assignedClasses.includes(cls.name);
+                    label.appendChild(checkbox);
+                    label.appendChild(document.createTextNode(` ${cls.name}`));
+                    assignDiv.appendChild(label);
+                });
+
+                const assignBtn = document.createElement('button');
+                assignBtn.textContent = 'Update Assignments';
+                assignBtn.onclick = () => assignClasses(subj._id);
+
+                const assignedUl = document.createElement('ul');
+                assignedUl.className = 'assigned-classes-list';
+                subj.assignedClasses.forEach(clsName => {
+                    const li = document.createElement('li');
+                    li.textContent = clsName;
+                    assignedUl.appendChild(li);
+                });
+
+                subjectDiv.appendChild(subjectTitle);
+                subjectDiv.appendChild(deleteBtn);
+                subjectDiv.appendChild(assignDiv);
+                subjectDiv.appendChild(assignBtn);
+                subjectDiv.appendChild(assignedUl);
+                subjectList.appendChild(subjectDiv);
+            });
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'sign-in.html';
+        }
+
+        // Load data on page load
+        window.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>
