@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Student = require('../models/Student');
 const Subject = require('../models/Subject');
-const Class = require('../models/Class'); // Added this import
+const Class = require('../models/Class'); // Add if missing
 const Attendance = require('../models/Attendance');
 
 const router = express.Router();

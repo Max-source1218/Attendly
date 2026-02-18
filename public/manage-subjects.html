@@ -14,6 +14,8 @@
             background-size: 20px 20px;
             background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
         }
+
+        /* Navigation */
         nav {
             background-color: #003366;
             color: white;
@@ -23,55 +25,67 @@
             align-items: center;
             position: sticky;
             top: 0;
+            z-index: 1000;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+
         nav .logo {
             font-size: 28px;
             font-weight: bold;
             font-family: Georgia, serif;
             color: #FFD700;
         }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            border-radius: 2px;
+        }
+
         nav ul {
             list-style: none;
             display: flex;
             margin: 0;
-            padding: 0;
-            padding-top: 5px;
+            padding: 5px 0 0 0;
         }
-        nav li {
-            margin: 0 15px;
-        }
-        nav a {
+
+        nav li { margin: 0 15px; }
+
+        nav a, nav button {
             color: white;
             text-decoration: none;
             font-weight: bold;
             transition: color 0.3s;
-        }
-        nav a:hover {
-            color: #FFD700;
-        }
-        nav button {
             background: none;
             border: none;
-            color: white;
             cursor: pointer;
-            font-weight: bold;
-            transition: color 0.3s;
+            font-size: 16px;
         }
-        nav button:hover {
-            color: #FFD700;
-        }
+
+        nav a:hover, nav button:hover { color: #FFD700; }
+
+        /* Container */
         .container {
             padding: 40px 20px;
             max-width: 1200px;
             margin: 0 auto;
         }
+
         h2 {
             font-family: Georgia, serif;
             color: #003366;
             text-align: center;
             margin-bottom: 30px;
         }
+
         .manage-subjects {
             background-color: white;
             padding: 30px;
@@ -79,9 +93,45 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             border-top: 5px solid #003366;
         }
-        .subject-list {
-            margin-top: 30px;
+
+        /* Form Elements */
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
         }
+
+        input {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            flex: 1;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .delete-btn { background-color: #f44336; margin-bottom: 15px; }
+        .delete-btn:hover { background-color: #d32f2f; }
+
+        /* Subject Items */
+        .subject-list { margin-top: 30px; }
+
         .subject-item {
             background-color: #f9f9f9;
             padding: 20px;
@@ -90,99 +140,92 @@
             border-left: 5px solid #4CAF50;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
+
         .subject-item h4 {
             margin: 0 0 15px 0;
             font-family: Georgia, serif;
             color: #003366;
+            font-size: 20px;
         }
+
+        .assign-classes {
+            margin: 15px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #eee;
+        }
+
+        .assign-classes label {
+            display: inline-block;
+            margin: 8px 15px 8px 0;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
         .assigned-classes-list {
             list-style: none;
-            padding: 0;
+            padding: 10px 0;
+            color: #555;
+            font-size: 14px;
         }
-        .assigned-classes-list li {
-            padding: 5px 0;
-        }
-        input {
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            width: 250px;
-            font-size: 16px;
-        }
-        .assign-classes {
-            margin-top: 15px;
-        }
-        .assign-classes label {
-            display: block;
-            margin: 8px 0;
-            font-weight: bold;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            margin: 0 10px;
-            font-size: 16px;
-            font-weight: bold;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-        button:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-        }
-        .delete-btn {
-            background-color: #f44336;
-        }
-        /* Modal Styles */
+
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
+            z-index: 2000;
+            left: 0; top: 0; width: 100%; height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
-            overflow: auto;
+            backdrop-filter: blur(2px);
         }
+
         .modal-content {
             background-color: white;
             margin: 5% auto;
-            padding: 20px;
+            padding: 25px;
             border-radius: 10px;
-            width: 80%;
+            width: 90%;
             max-width: 600px;
-            max-height: 80%;
+            max-height: 80vh;
             overflow-y: auto;
         }
-        .modal h3 {
-            margin-top: 0;
-            color: #003366;
-        }
-        .class-exclusion {
-            margin-bottom: 20px;
-        }
+
         .student-list {
-            margin-left: 20px;
-            max-height: 200px;
-            overflow-y: auto;
+            margin: 10px 0 20px 20px;
+            padding: 10px;
+            background: #f1f1f1;
+            border-radius: 6px;
         }
-        .student-list label {
-            display: block;
-            margin: 5px 0;
-        }
+
         .modal-buttons {
-            text-align: right;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
             margin-top: 20px;
         }
-        .cancel-btn {
-            background-color: #ccc;
-            color: black;
+
+        .cancel-btn { background-color: #ccc; color: black; }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+            nav ul {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px; left: 0; width: 100%;
+                background-color: #003366;
+                padding: 20px 0;
+                text-align: center;
+            }
+            nav ul.active { display: flex; }
+            nav li { margin: 10px 0; }
+            .input-group { flex-direction: column; }
+            .container { padding: 20px 10px; }
+            button { width: 100%; margin: 5px 0; }
         }
+
         footer {
             text-align: center;
             padding: 20px;
@@ -190,43 +233,16 @@
             color: white;
             margin-top: 50px;
         }
-        @media (max-width: 768px) {
-            nav {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            nav ul {
-                flex-direction: column;
-                width: 100%;
-            }
-            nav li {
-                margin: 10px 0;
-            }
-            .container {
-                padding: 20px 10px;
-            }
-            input {
-                width: 100%;
-            }
-            .subject-item {
-                padding: 15px;
-            }
-            button {
-                margin: 5px 0;
-                width: 100%;
-            }
-            .modal-content {
-                width: 95%;
-                margin: 10% auto;
-            }
-        }
     </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
+
     <nav>
         <div class="logo">📝 Attendly</div>
-        <ul>
+        <div class="menu-toggle" id="mobile-menu">
+            <span></span><span></span><span></span>
+        </div>
+        <ul id="nav-list">
             <li><a href="faculty-dashboard.html">Dashboard</a></li>
             <li><a href="manage-classes.html">Manage Classes</a></li>
             <li><a href="mark-attendance.html">Take Attendance</a></li>
@@ -236,14 +252,11 @@
         </ul>
     </nav>
 
-    <!-- Modal for Exclusions -->
     <div id="exclusion-modal" class="modal">
         <div class="modal-content">
             <h3>Exclude Irregular Students</h3>
             <p>Select students to exclude from each assigned class for this subject.</p>
-            <div id="modal-classes">
-                <!-- Classes and students will be populated here -->
-            </div>
+            <div id="modal-classes"></div>
             <div class="modal-buttons">
                 <button class="cancel-btn" onclick="closeModal()">Cancel</button>
                 <button onclick="saveExclusions()">Save Exclusions</button>
@@ -251,91 +264,64 @@
         </div>
     </div>
 
-    <!-- Manage Subjects Content -->
     <div class="container">
         <div class="manage-subjects">
             <h2>Manage Subjects</h2>
-            <div>
+            <div class="input-group">
                 <input type="text" id="subject-name" placeholder="Enter subject name (e.g., Mathematics)">
                 <button onclick="createSubject()">Create Subject</button>
             </div>
-            <div class="subject-list" id="subject-list">
-                <!-- Subjects will be added here dynamically -->
-            </div>
+            <div class="subject-list" id="subject-list"></div>
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
-        <p>&copy; 2026 Attendly - University Attendance Management System</p>
+        <p>&copy; 2026 Attendly - PRMSU Castillejos Student Attendance Tracker</p>
     </footer>
 
     <script>
-        let classes = []; // Will be loaded from backend
-        let subjects = []; // Will be loaded from backend
-        let currentSubjectId = null; // For modal
+        // Menu toggle
+        document.getElementById('mobile-menu').addEventListener('click', function() {
+            document.getElementById('nav-list').classList.toggle('active');
+        });
 
-        // Function to create a subject
+        let classes = []; 
+        let subjects = []; 
+        let currentSubjectId = null;
+
         async function createSubject() {
             const token = localStorage.getItem('token');
-            if (!token) {
-                alert('Please sign in first.');
-                window.location.href = 'sign-in.html';
-                return;
-            }
-
+            if (!token) { alert('Please sign in first.'); window.location.href = 'sign-in.html'; return; }
             const subjectName = document.getElementById('subject-name').value.trim();
-            if (!subjectName) {
-                alert('Please enter a subject name.');
-                return;
-            }
-
+            if (!subjectName) { alert('Please enter a subject name.'); return; }
             try {
                 const response = await fetch('/api/subjects', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                     body: JSON.stringify({ name: subjectName })
                 });
-
-                if (!response.ok) {
-                    console.log('Create subject response status:', response.status);
-                    throw new Error(`Failed to create subject: ${response.status}`);
-                }
-
-                const data = await response.json(); // Parse response
-                console.log('Created subject:', data);
-
+                if (!response.ok) throw new Error(`Failed to create subject: ${response.status}`);
                 document.getElementById('subject-name').value = '';
-                loadData(); // Refresh the list
+                loadData();
             } catch (error) {
-                console.error('Error creating subject:', error);
                 alert('Error creating subject: ' + error.message);
             }
         }
 
-        // Function to open modal for exclusions
         function openExclusionModal(subjectId) {
             currentSubjectId = subjectId;
             const modalClasses = document.getElementById('modal-classes');
             modalClasses.innerHTML = '';
-
             const checkboxes = document.querySelectorAll(`input[name="class-${subjectId}"]:checked`);
             const assignedClasses = Array.from(checkboxes).map(cb => cb.value);
-
-            if (assignedClasses.length === 0) {
-                alert('Please assign at least one class first.');
-                return;
-            }
+            if (assignedClasses.length === 0) { alert('Please assign at least one class first.'); return; }
 
             assignedClasses.forEach(clsName => {
                 const classDiv = document.createElement('div');
                 classDiv.className = 'class-exclusion';
                 classDiv.innerHTML = `<strong>Class: ${clsName}</strong>`;
-
                 const studentList = document.createElement('div');
                 studentList.className = 'student-list';
-
-                // Find the class object
                 const cls = classes.find(c => c.name === clsName);
                 if (cls) {
                     fetch(`/api/students?classId=${cls._id}`, {
@@ -345,18 +331,16 @@
                     .then(students => {
                         students.forEach(student => {
                             const label = document.createElement('label');
+                            label.style.display = 'block';
                             const checkbox = document.createElement('input');
                             checkbox.type = 'checkbox';
                             checkbox.name = `exclude-${clsName}`;
                             checkbox.value = student._id;
-
-                            // Check if already excluded
                             const subj = subjects.find(s => s._id === subjectId);
                             const exclusion = subj.excludedStudents && subj.excludedStudents.find(ex => ex.className === clsName);
                             if (exclusion && exclusion.studentIds && exclusion.studentIds.some(id => id === student._id)) {
                                 checkbox.checked = true;
                             }
-
                             label.appendChild(checkbox);
                             label.appendChild(document.createTextNode(` ${student.name}`));
                             studentList.appendChild(label);
@@ -364,26 +348,17 @@
                     })
                     .catch(error => console.error('Error fetching students:', error));
                 }
-
                 classDiv.appendChild(studentList);
                 modalClasses.appendChild(classDiv);
             });
-
             document.getElementById('exclusion-modal').style.display = 'block';
         }
 
-        // Function to save exclusions and assign classes
         async function saveExclusions() {
             const token = localStorage.getItem('token');
-            if (!token) {
-                alert('Please sign in first.');
-                window.location.href = 'sign-in.html';
-                return;
-            }
-
+            if (!token) return;
             const checkboxes = document.querySelectorAll(`input[name="class-${currentSubjectId}"]:checked`);
             const assignedClasses = Array.from(checkboxes).map(cb => cb.value);
-
             const excludedStudents = [];
             assignedClasses.forEach(clsName => {
                 const exclusionCheckboxes = document.querySelectorAll(`input[name="exclude-${clsName}"]:checked`);
@@ -394,149 +369,104 @@
                     });
                 }
             });
-
             try {
                 const response = await fetch(`/api/subjects/${currentSubjectId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                     body: JSON.stringify({ assignedClasses, excludedStudents })
                 });
-
-                if (!response.ok) {
-                    console.log('Save exclusions response status:', response.status);
-                    throw new Error(`Failed to update assignments: ${response.status}`);
-                }
-
-                const data = await response.json(); // Parse response
-                console.log('Updated subject:', data);
-
+                if (!response.ok) throw new Error(`Failed to update: ${response.status}`);
                 closeModal();
-                loadData(); // Refresh the list
+                loadData();
             } catch (error) {
-                console.error('Error saving exclusions:', error);
                 alert('Error saving exclusions: ' + error.message);
             }
         }
 
-        // Function to close modal
         function closeModal() {
             document.getElementById('exclusion-modal').style.display = 'none';
             currentSubjectId = null;
         }
 
-        // Function to delete a subject
         async function deleteSubject(subjectId, subjectName) {
             const token = localStorage.getItem('token');
-            if (!token) {
-                alert('Please sign in first.');
-                window.location.href = 'sign-in.html';
-                return;
-            }
-
-            if (!confirm(`Are you sure you want to delete the subject "${subjectName}"?`)) return;
-
+            if (!token) return;
+            if (!confirm(`Are you sure you want to delete "${subjectName}"?`)) return;
             try {
                 const response = await fetch(`/api/subjects/${subjectId}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
-
-                if (!response.ok) {
-                    console.log('Delete subject response status:', response.status);
-                    throw new Error(`Failed to delete subject: ${response.status}`);
-                }
-
-                const data = await response.json(); // Parse response (if any)
-                console.log('Deleted subject:', data);
-
-                loadData(); // Refresh the list
+                if (!response.ok) throw new Error(`Failed to delete subject: ${response.status}`);
+                loadData();
             } catch (error) {
-                console.error('Error deleting subject:', error);
                 alert('Error deleting subject: ' + error.message);
             }
         }
 
-        // Function to load classes and subjects
         async function loadData() {
             const token = localStorage.getItem('token');
-            if (!token) {
-                alert('Please sign in first.');
-                window.location.href = 'sign-in.html';
-                return;
-            }
-
+            if (!token) return;
             try {
-                const [classResponse, subjectResponse] = await Promise.all([
+                const [classRes, subjectRes] = await Promise.all([
                     fetch('/api/classes', { headers: { 'Authorization': `Bearer ${token}` } }),
                     fetch('/api/subjects', { headers: { 'Authorization': `Bearer ${token}` } })
                 ]);
-
-                if (!classResponse.ok || !subjectResponse.ok) {
-                    console.log('Load data response statuses:', classResponse.status, subjectResponse.status);
-                    throw new Error('Failed to fetch data');
-                }
-
-                classes = await classResponse.json();
-                subjects = await subjectResponse.json();
+                classes = await classRes.json();
+                subjects = await subjectRes.json();
                 renderSubjects();
             } catch (error) {
                 console.error('Error loading data:', error);
-                alert('Error loading data: ' + error.message);
             }
         }
 
-        // Function to render subjects
         function renderSubjects() {
-            const subjectList = document.getElementById('subject-list');
-            subjectList.innerHTML = ''; // Clear existing list
-
+            const list = document.getElementById('subject-list');
+            list.innerHTML = '';
             subjects.forEach((subj) => {
-                const subjectDiv = document.createElement('div');
-                subjectDiv.className = 'subject-item';
-
-                const subjectTitle = document.createElement('h4');
-                subjectTitle.textContent = subj.name;
-
-                const deleteBtn = document.createElement('button');
-                deleteBtn.className = 'delete-btn';
-                deleteBtn.textContent = 'Delete Subject';
-                deleteBtn.onclick = () => deleteSubject(subj._id, subj.name);
-
+                const div = document.createElement('div');
+                div.className = 'subject-item';
+                div.innerHTML = `<h4>${subj.name}</h4>`;
+                
+                const delBtn = document.createElement('button');
+                delBtn.className = 'delete-btn';
+                delBtn.textContent = 'Delete Subject';
+                delBtn.onclick = () => deleteSubject(subj._id, subj.name);
+                
                 const assignDiv = document.createElement('div');
                 assignDiv.className = 'assign-classes';
-                assignDiv.innerHTML = '<strong>Assign Classes:</strong>';
-                classes.forEach((cls) => {
+                assignDiv.innerHTML = '<strong>Assign Classes:</strong><br>';
+                classes.forEach(cls => {
                     const label = document.createElement('label');
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.name = `class-${subj._id}`;
-                    checkbox.value = cls.name;
-                    checkbox.checked = subj.assignedClasses && subj.assignedClasses.includes(cls.name);
-                    label.appendChild(checkbox);
+                    const cb = document.createElement('input');
+                    cb.type = 'checkbox';
+                    cb.name = `class-${subj._id}`;
+                    cb.value = cls.name;
+                    cb.checked = subj.assignedClasses && subj.assignedClasses.includes(cls.name);
+                    label.appendChild(cb);
                     label.appendChild(document.createTextNode(` ${cls.name}`));
                     assignDiv.appendChild(label);
                 });
 
-                const assignBtn = document.createElement('button');
-                assignBtn.textContent = 'Update Assignments';
-                assignBtn.onclick = () => openExclusionModal(subj._id);
+                const updateBtn = document.createElement('button');
+                updateBtn.textContent = 'Update Assignments';
+                updateBtn.onclick = () => openExclusionModal(subj._id);
 
-                const assignedUl = document.createElement('ul');
-                assignedUl.className = 'assigned-classes-list';
+                const ul = document.createElement('ul');
+                ul.className = 'assigned-classes-list';
                 if (subj.assignedClasses) {
-                    subj.assignedClasses.forEach(clsName => {
+                    subj.assignedClasses.forEach(c => {
                         const li = document.createElement('li');
-                        li.textContent = clsName;
-                        assignedUl.appendChild(li);
+                        li.textContent = `• ${c}`;
+                        ul.appendChild(li);
                     });
                 }
 
-                subjectDiv.appendChild(subjectTitle);
-                subjectDiv.appendChild(deleteBtn);
-                subjectDiv.appendChild(assignDiv);
-                subjectDiv.appendChild(assignBtn);
-                subjectDiv.appendChild(assignedUl);
-                subjectList.appendChild(subjectDiv);
+                div.appendChild(delBtn);
+                div.appendChild(assignDiv);
+                div.appendChild(updateBtn);
+                div.appendChild(ul);
+                list.appendChild(div);
             });
         }
 
@@ -545,7 +475,6 @@
             window.location.href = 'sign-in.html';
         }
 
-        // Load data on page load
         window.addEventListener('DOMContentLoaded', loadData);
     </script>
 </body>

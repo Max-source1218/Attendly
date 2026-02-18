@@ -55,4 +55,14 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+// GET /api/subjects/:id: Get a single subject (owned by user)
+router.get('/:id', async (req, res) => {
+  try {
+    const subject = await Subject.findOne({ _id: req.params.id, userId: req.user.id });
+    if (!subject) return res.status(404).json({ error: 'Subject not found or not owned by you' });
+    res.json(subject);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 module.exports = router;

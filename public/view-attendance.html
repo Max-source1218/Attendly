@@ -14,6 +14,8 @@
             background-size: 20px 20px;
             background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
         }
+
+        /* Navigation */
         nav {
             background-color: #003366;
             color: white;
@@ -23,55 +25,67 @@
             align-items: center;
             position: sticky;
             top: 0;
+            z-index: 1000;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+
         nav .logo {
             font-size: 28px;
             font-weight: bold;
             font-family: Georgia, serif;
             color: #FFD700;
         }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            border-radius: 2px;
+        }
+
         nav ul {
             list-style: none;
             display: flex;
             margin: 0;
-            padding: 0;
-            padding-top: 5px;
+            padding: 5px 0 0 0;
         }
-        nav li {
-            margin: 0 15px;
-        }
-        nav a {
+
+        nav li { margin: 0 15px; }
+
+        nav a, nav button {
             color: white;
             text-decoration: none;
             font-weight: bold;
             transition: color 0.3s;
-        }
-        nav a:hover {
-            color: #FFD700;
-        }
-        nav button {
             background: none;
             border: none;
-            color: white;
             cursor: pointer;
-            font-weight: bold;
-            transition: color 0.3s;
+            font-size: 16px;
         }
-        nav button:hover {
-            color: #FFD700;
-        }
+
+        nav a:hover, nav button:hover { color: #FFD700; }
+
+        /* Container */
         .container {
             padding: 40px 20px;
             max-width: 1200px;
             margin: 0 auto;
         }
+
         h2 {
             font-family: Georgia, serif;
             color: #003366;
             text-align: center;
             margin-bottom: 30px;
         }
+
         .attendance-section {
             background-color: white;
             padding: 30px;
@@ -79,69 +93,125 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             border-top: 5px solid #003366;
         }
-        .attendance-list {
+
+        /* Stats Section */
+        #aggregated-section h3 {
+            color: #003366;
+            font-family: Georgia, serif;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .aggregated-stats {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #e8f5e8;
+            border-radius: 8px;
+            border-left: 5px solid #4CAF50;
+        }
+
+        .aggregated-stats h5 {
+            margin: 0 0 10px 0;
+            color: #003366;
+            font-size: 18px;
+        }
+
+        .aggregated-stats ul {
             list-style: none;
             padding: 0;
         }
+
+        .aggregated-stats li {
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        /* Attendance Records */
+        .attendance-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 40px;
+        }
+
         .attendance-item {
             background-color: #f9f9f9;
-            padding: 20px;
-            margin: 15px 0;
+            padding: 25px;
+            margin: 20px 0;
             border-radius: 8px;
-            border-left: 5px solid #4CAF50;
+            border-left: 5px solid #003366;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
+
         .attendance-item h4 {
-            margin: 0 0 10px 0;
+            margin: 0 0 15px 0;
             font-family: Georgia, serif;
             color: #003366;
+            font-size: 1.2rem;
         }
+
         .attendance-details {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
         }
+
         .detail {
             flex: 1;
-            min-width: 200px;
+            min-width: 150px;
         }
-        .detail strong {
-            color: #003366;
-        }
+
+        .detail strong { color: #003366; }
+
+        /* Student Lists */
         .student-lists {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 30px;
         }
+
         .student-list {
             flex: 1;
-            min-width: 200px;
+            min-width: 250px;
         }
+
         .student-list ul {
             list-style: none;
             padding: 0;
+            margin-top: 10px;
         }
+
         .student-list li {
-            padding: 5px 0;
+            padding: 6px 0;
             border-bottom: 1px solid #eee;
+            font-size: 14px;
         }
-        .present-list {
-            color: #4CAF50;
+
+        .present-list { color: #2e7d32; }
+        .absent-list { color: #c62828; }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+            nav ul {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px; left: 0; width: 100%;
+                background-color: #003366;
+                padding: 20px 0;
+                text-align: center;
+            }
+            nav ul.active { display: flex; }
+            nav li { margin: 10px 0; }
+            .container { padding: 20px 10px; }
+            .attendance-details, .student-lists { flex-direction: column; gap: 15px; }
+            .student-list { min-width: 100%; }
         }
-        .absent-list {
-            color: #f44336;
-        }
-        .aggregated-stats {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #e8f5e8;
-            border-radius: 8px;
-        }
-        .aggregated-stats h5 {
-            margin: 0 0 10px 0;
-            color: #003366;
-        }
+
         footer {
             text-align: center;
             padding: 20px;
@@ -149,38 +219,16 @@
             color: white;
             margin-top: 50px;
         }
-        @media (max-width: 768px) {
-            nav {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            nav ul {
-                flex-direction: column;
-                width: 100%;
-            }
-            nav li {
-                margin: 10px 0;
-            }
-            .container {
-                padding: 20px 10px;
-            }
-            .attendance-details {
-                flex-direction: column;
-            }
-            .student-lists {
-                flex-direction: column;
-            }
-            .attendance-item {
-                padding: 15px;
-            }
-        }
     </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
+
     <nav>
         <div class="logo">📝 Attendly</div>
-        <ul>
+        <div class="menu-toggle" id="mobile-menu">
+            <span></span><span></span><span></span>
+        </div>
+        <ul id="nav-list">
             <li><a href="faculty-dashboard.html">Dashboard</a></li>
             <li><a href="manage-classes.html">Manage Classes</a></li>
             <li><a href="manage-subjects.html">Manage Subjects</a></li>
@@ -190,26 +238,26 @@
         </ul>
     </nav>
 
-    <!-- View Attendance Content -->
     <div class="container">
         <div class="attendance-section">
             <h2>View Attendance Records</h2>
             <div id="aggregated-section">
-                <!-- Aggregated stats will be displayed here -->
-            </div>
+                </div>
             <ul class="attendance-list" id="attendance-list">
-                <!-- Attendance records will be displayed here -->
-            </ul>
+                </ul>
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
-        <p>&copy; 2026 Attendly - University Attendance Management System</p>
+        <p>&copy; 2026 Attendly - PRMSU Castillejos Student Attendance Tracker</p>
     </footer>
 
     <script>
-        // Load and display attendance records and aggregated stats
+        // Menu Toggle Logic
+        document.getElementById('mobile-menu').addEventListener('click', function() {
+            document.getElementById('nav-list').classList.toggle('active');
+        });
+
         async function loadAttendance() {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -233,7 +281,6 @@
             }
         }
 
-        // Render aggregated student stats per class
         function renderAggregatedStats(stats) {
             const aggregatedSection = document.getElementById('aggregated-section');
             aggregatedSection.innerHTML = '<h3>Student Attendance Summary by Class</h3>';
@@ -254,7 +301,6 @@
             });
         }
 
-        // Render attendance records
         function renderAttendance(records) {
             const attendanceList = document.getElementById('attendance-list');
             attendanceList.innerHTML = '';
@@ -329,7 +375,6 @@
             window.location.href = 'sign-in.html';
         }
 
-        // Load on page load
         window.addEventListener('DOMContentLoaded', loadAttendance);
     </script>
 </body>

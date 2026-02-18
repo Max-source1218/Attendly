@@ -14,6 +14,8 @@
             background-size: 20px 20px;
             background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
         }
+
+        /* Navigation */
         nav {
             background-color: #003366;
             color: white;
@@ -23,55 +25,67 @@
             align-items: center;
             position: sticky;
             top: 0;
+            z-index: 1000;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+
         nav .logo {
             font-size: 28px;
             font-weight: bold;
             font-family: Georgia, serif;
             color: #FFD700;
         }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            border-radius: 2px;
+        }
+
         nav ul {
             list-style: none;
             display: flex;
             margin: 0;
-            padding: 0;
-            padding-top: 5px;
+            padding: 5px 0 0 0;
         }
-        nav li {
-            margin: 0 15px;
-        }
-        nav a {
+
+        nav li { margin: 0 15px; }
+
+        nav a, nav button {
             color: white;
             text-decoration: none;
             font-weight: bold;
             transition: color 0.3s;
-        }
-        nav a:hover {
-            color: #FFD700;
-        }
-        nav button {
             background: none;
             border: none;
-            color: white;
             cursor: pointer;
-            font-weight: bold;
-            transition: color 0.3s;
+            font-size: 16px;
         }
-        nav button:hover {
-            color: #FFD700;
-        }
+
+        nav a:hover, nav button:hover { color: #FFD700; }
+
+        /* Container */
         .container {
             padding: 40px 20px;
             max-width: 1200px;
             margin: 0 auto;
         }
+
         h2 {
             font-family: Georgia, serif;
             color: #003366;
             text-align: center;
             margin-bottom: 30px;
         }
+
         .records-section {
             background-color: white;
             padding: 30px;
@@ -79,44 +93,87 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             border-top: 5px solid #003366;
         }
-        .class-record {
-            margin-bottom: 30px;
+
+        /* Export Button */
+        .export-buttons {
+            text-align: right;
+            margin-bottom: 25px;
         }
+
+        .export-btn {
+            background-color: #2e7d32;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .export-btn:hover { background-color: #1b5e20; }
+
+        /* Tables */
+        .class-record { margin-bottom: 40px; }
+
         .class-record h3 {
             color: #003366;
-            margin-bottom: 15px;
+            font-family: Georgia, serif;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
         }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
+            background: white;
         }
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
+
         th {
-            background-color: #f2f2f2;
+            background-color: #f8f9fa;
             color: #003366;
+            font-weight: bold;
+            padding: 15px;
+            text-align: left;
+            border-bottom: 2px solid #dee2e6;
         }
-        .present-count {
-            color: #4CAF50;
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            color: #333;
         }
-        .absent-count {
-            color: #f44336;
-        }
+
+        tr:hover { background-color: #fcfcfc; }
+
+        .present-count { color: #2e7d32; font-weight: bold; }
+        .absent-count { color: #d32f2f; font-weight: bold; }
+
+        /* Drop Button */
         .drop-btn {
             background-color: #f44336;
             color: white;
             border: none;
-            padding: 5px 10px;
+            padding: 6px 12px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 13px;
+            transition: background 0.3s;
         }
-        .drop-btn:hover {
-            opacity: 0.8;
-        }
+
+        .drop-btn:hover { background-color: #c62828; }
+
+        /* Footer */
         footer {
             text-align: center;
             padding: 20px;
@@ -124,180 +181,233 @@
             color: white;
             margin-top: 50px;
         }
+
+        /* Mobile Adjustments */
         @media (max-width: 768px) {
-            nav {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+            .menu-toggle { display: flex; }
             nav ul {
+                display: none;
                 flex-direction: column;
-                width: 100%;
+                position: absolute;
+                top: 60px; left: 0; width: 100%;
+                background-color: #003366;
+                padding: 20px 0;
+                text-align: center;
             }
-            nav li {
-                margin: 10px 0;
-            }
-            .container {
-                padding: 20px 10px;
-            }
-            table {
-                font-size: 14px;
-                overflow-x: auto;
-                display: block;
-                white-space: nowrap;
-            }
-            th, td {
-                padding: 8px;
-            }
+            nav ul.active { display: flex; }
+            nav li { margin: 10px 0; }
+            .container { padding: 20px 10px; }
+            .export-buttons { text-align: center; }
+            .export-btn { width: 100%; justify-content: center; }
+            th, td { padding: 10px; font-size: 14px; }
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
-    <!-- Navigation Bar -->
+
     <nav>
         <div class="logo">📝 Attendly</div>
-        <ul>
+        <div class="menu-toggle" id="mobile-menu">
+            <span></span><span></span><span></span>
+        </div>
+        <ul id="nav-list">
             <li><a href="faculty-dashboard.html">Dashboard</a></li>
             <li><a href="manage-classes.html">Manage Classes</a></li>
             <li><a href="manage-subjects.html">Manage Subjects</a></li>
             <li><a href="mark-attendance.html">Take Attendance</a></li>
             <li><a href="view-attendance.html">View All Attendance</a></li>
+            <li><a href="subject-records.html">Subject Records</a></li>
             <li><button onclick="logout()">Logout</button></li>
         </ul>
     </nav>
 
-    <!-- Student Records Content -->
     <div class="container">
         <div class="records-section">
             <h2>Student Attendance Records</h2>
-            <div id="records-list">
-                <!-- Records will be displayed here -->
+            <div class="export-buttons">
+                <button class="export-btn" onclick="exportToPDF()">📄 Export to PDF</button>
             </div>
+            <div id="records-list">
+                </div>
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
-        <p>&copy; 2026 Attendly - University Attendance Management System</p>
+        <p>&copy; 2026 Attendly - PRMSU Castillejos Student Attendance Tracker</p>
     </footer>
 
     <script>
-        // Load and display student records
-        // In student-record.html, update loadStudentRecords to filter by subjectId and classId if provided
-async function loadStudentRecords() {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        alert('Please sign in first.');
-        window.location.href = 'sign-in.html';
-        return;
-    }
+        // Menu toggle logic
+        document.getElementById('mobile-menu').addEventListener('click', function() {
+            document.getElementById('nav-list').classList.toggle('active');
+        });
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const subjectId = urlParams.get('subjectId');
-    const classId = urlParams.get('classId');
+        let subjectName = 'All Subjects';
 
-    try {
-        let url = '/api/attendance/student-records';
-        if (subjectId && classId) {
-            url += `?subjectId=${subjectId}&classId=${classId}`;
+        async function loadStudentRecords() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Please sign in first.');
+                window.location.href = 'sign-in.html';
+                return;
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const subjectId = urlParams.get('subjectId');
+            const classId = urlParams.get('classId');
+
+            if (subjectId) {
+                try {
+                    const subjectResponse = await fetch(`/api/subjects/${subjectId}`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (subjectResponse.ok) {
+                        const subject = await subjectResponse.json();
+                        subjectName = subject.name;
+                    }
+                } catch (error) {
+                    console.error('Error fetching subject name:', error);
+                }
+            }
+
+            try {
+                let url = '/api/attendance/student-records';
+                if (subjectId && classId) {
+                    url += `?subjectId=${subjectId}&classId=${classId}`;
+                }
+
+                const response = await fetch(url, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!response.ok) throw new Error('Failed to fetch student records');
+
+                const records = await response.json();
+                renderRecords(records);
+            } catch (error) {
+                console.error('Error loading student records:', error);
+                alert('Error loading student records: ' + error.message);
+            }
         }
 
-        const response = await fetch(url, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (!response.ok) throw new Error('Failed to fetch student records');
+        function renderRecords(records) {
+            const recordsList = document.getElementById('records-list');
+            recordsList.innerHTML = '';
 
-        const records = await response.json();
-        console.log('Fetched records:', records);
-        renderRecords(records);
-    } catch (error) {
-        console.error('Error loading student records:', error);
-        alert('Error loading student records: ' + error.message);
-    }
-}
+            if (records.length === 0) {
+                recordsList.innerHTML = '<p style="text-align:center; color: #666;">No student records found.</p>';
+                return;
+            }
 
-        // Update the renderRecords function to include subjectId and classId in the button
-function renderRecords(records) {
-    const recordsList = document.getElementById('records-list');
-    recordsList.innerHTML = '';
+            records.forEach(record => {
+                const classDiv = document.createElement('div');
+                classDiv.className = 'class-record';
+                classDiv.innerHTML = `<h3>Class: ${record.className}</h3>`;
 
-    if (records.length === 0) {
-        recordsList.innerHTML = '<p>No student records found.</p>';
-        return;
-    }
+                const tableContainer = document.createElement('div');
+                tableContainer.className = 'table-container';
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const subjectId = urlParams.get('subjectId');
-    const classId = urlParams.get('classId');
+                const table = document.createElement('table');
+                table.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Total Presents</th>
+                            <th>Total Absences</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-${record.className.replace(/\s+/g, '')}"></tbody>
+                `;
 
-    records.forEach(record => {
-        const classDiv = document.createElement('div');
-        classDiv.className = 'class-record';
-        classDiv.innerHTML = `<h3>Class: ${record.className}</h3>`;
+                const tbody = table.querySelector('tbody');
+                const urlParams = new URLSearchParams(window.location.search);
 
-        const table = document.createElement('table');
-        const tbody = document.createElement('tbody');
+                record.students.forEach(student => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${student.studentName}</td>
+                        <td class="present-count">${student.presentCount}</td>
+                        <td class="absent-count">${student.absentCount}</td>
+                        <td>${student.absentCount >= 3 ? `<button class="drop-btn" onclick="dropStudent('${student.studentId}', '${student.studentName}', '${urlParams.get('subjectId')}', '${urlParams.get('classId')}')">Drop Student</button>` : '—'}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
 
-        // Add header
-        tbody.innerHTML = `
-            <thead>
-                <tr>
-                    <th>Student Name</th>
-                    <th>Total Presents</th>
-                    <th>Total Absences</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-        `;
+                tableContainer.appendChild(table);
+                classDiv.appendChild(tableContainer);
+                recordsList.appendChild(classDiv);
+            });
+        }
 
-        record.students.forEach(student => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${student.studentName}</td>
-                <td class="present-count">${student.presentCount}</td>
-                <td class="absent-count">${student.absentCount}</td>
-                <td>${student.absentCount >= 3 ? `<button class="drop-btn" onclick="dropStudent('${student.studentId}', '${student.studentName}', '${subjectId}', '${classId}')">Drop from Subject</button>` : ''}</td>
-            `;
-            tbody.appendChild(tr);
-        });
+        async function dropStudent(studentId, studentName, subjectId, classId) {
+            const token = localStorage.getItem('token');
+            if (!confirm(`Are you sure you want to drop ${studentName}?`)) return;
 
-        table.appendChild(tbody);
-        classDiv.appendChild(table);
-        recordsList.appendChild(classDiv);
-    });
-}
+            try {
+                const response = await fetch(`/api/students/${studentId}?subjectId=${subjectId}&classId=${classId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!response.ok) throw new Error('Failed to drop student');
 
-// Update dropStudent function to include subjectId and classId
-async function dropStudent(studentId, studentName, subjectId, classId) {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        alert('Please sign in first.');
-        window.location.href = 'sign-in.html';
-        return;
-    }
+                alert(`${studentName} dropped successfully.`);
+                loadStudentRecords();
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
 
-    if (!confirm(`Are you sure you want to drop ${studentName} from this subject? This will remove their attendance records for this subject-class only.`)) return;
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
 
-    try {
-        const response = await fetch(`/api/students/${studentId}?subjectId=${subjectId}&classId=${classId}`, {
-            method: 'DELETE',
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (!response.ok) throw new Error('Failed to drop student from subject');
+            doc.setFontSize(18);
+            doc.text(`Attendance Report: ${subjectName}`, 14, 20);
+            doc.setFontSize(11);
+            doc.setTextColor(100);
+            doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 28);
 
-        alert(`${studentName} has been dropped from this subject.`);
-        loadStudentRecords(); // Refresh the records
-    } catch (error) {
-        console.error('Error dropping student from subject:', error);
-        alert('Error dropping student from subject: ' + error.message);
-    }
-}
+            const recordsList = document.getElementById('records-list');
+            const tables = recordsList.querySelectorAll('table');
+
+            let yPosition = 35;
+            tables.forEach((table, index) => {
+                const className = table.closest('.class-record').querySelector('h3').textContent;
+                
+                doc.setTextColor(0, 51, 102);
+                doc.text(className, 14, yPosition);
+                yPosition += 5;
+
+                const data = [];
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length >= 3) {
+                        data.push([cells[0].textContent, cells[1].textContent, cells[2].textContent]);
+                    }
+                });
+
+                doc.autoTable({
+                    head: [['Student Name', 'Presents', 'Absences']],
+                    body: data,
+                    startY: yPosition,
+                    theme: 'grid',
+                    headStyles: { fillColor: [0, 51, 102] }
+                });
+
+                yPosition = doc.lastAutoTable.finalY + 15;
+            });
+
+            doc.save(`Attendance-${subjectName}.pdf`);
+        }
 
         function logout() {
             localStorage.removeItem('token');
             window.location.href = 'sign-in.html';
         }
 
-        // Load on page load
         window.addEventListener('DOMContentLoaded', loadStudentRecords);
     </script>
 </body>

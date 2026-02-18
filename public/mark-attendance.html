@@ -14,6 +14,8 @@
             background-size: 20px 20px;
             background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
         }
+
+        /* Navigation */
         nav {
             background-color: #003366;
             color: white;
@@ -23,102 +25,151 @@
             align-items: center;
             position: sticky;
             top: 0;
+            z-index: 1000;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+
         nav .logo {
             font-size: 28px;
             font-weight: bold;
             font-family: Georgia, serif;
             color: #FFD700;
         }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            border-radius: 2px;
+        }
+
         nav ul {
             list-style: none;
             display: flex;
             margin: 0;
-            padding: 0;
-            padding-top: 5px;
+            padding: 5px 0 0 0;
         }
-        nav li {
-            margin: 0 15px;
-        }
-        nav a {
+
+        nav li { margin: 0 15px; }
+
+        nav a, nav button {
             color: white;
             text-decoration: none;
             font-weight: bold;
             transition: color 0.3s;
-        }
-        nav a:hover {
-            color: #FFD700;
-        }
-        nav button {
             background: none;
             border: none;
-            color: white;
             cursor: pointer;
-            font-weight: bold;
-            transition: color 0.3s;
+            font-size: 16px;
         }
-        nav button:hover {
-            color: #FFD700;
-        }
+
+        nav a:hover, nav button:hover { color: #FFD700; }
+
+        /* Container */
         .container {
             padding: 40px 20px;
-            max-width: 1200px;
+            max-width: 800px;
             margin: 0 auto;
         }
+
         h2 {
             font-family: Georgia, serif;
             color: #003366;
             text-align: center;
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: #666;
             margin-bottom: 30px;
         }
+
         .take-attendance {
             background-color: white;
-            padding: 30px;
+            padding: 40px;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             border-top: 5px solid #003366;
         }
-        select {
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            width: 250px;
-            font-size: 16px;
+
+        /* Controls */
+        .selection-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
         }
-        button {
-            background-color: #4CAF50;
+
+        select {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            width: 300px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            outline: none;
+        }
+
+        select:focus {
+            border-color: #003366;
+        }
+
+        button#view-classes-btn {
+            background-color: #003366;
             color: white;
             padding: 12px 25px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            margin: 0 10px;
             font-size: 16px;
             font-weight: bold;
-            transition: background-color 0.3s, transform 0.2s;
+            transition: all 0.3s;
         }
-        button:hover {
-            background-color: #45a049;
+
+        button#view-classes-btn:hover {
+            background-color: #002244;
             transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
+
+        /* Class List Display */
         .class-list {
-            margin-top: 30px;
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
         }
+
         .class-item {
-            background-color: #f9f9f9;
-            padding: 15px;
-            margin: 10px 0;
+            background-color: #f8f9fa;
+            padding: 20px;
             border-radius: 8px;
             border-left: 5px solid #4CAF50;
-            display: inline-block;
+            text-align: center;
+            font-weight: bold;
+            color: #003366;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
+            border-top: 1px solid #eee;
+            border-right: 1px solid #eee;
+            border-bottom: 1px solid #eee;
         }
+
         .class-item:hover {
-            background-color: #e9e9e9;
+            background-color: #e8f5e9;
+            transform: scale(1.03);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
+
+        /* Footer */
         footer {
             text-align: center;
             padding: 20px;
@@ -126,76 +177,74 @@
             color: white;
             margin-top: 50px;
         }
+
+        /* Mobile Adjustments */
         @media (max-width: 768px) {
-            nav {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+            .menu-toggle { display: flex; }
             nav ul {
+                display: none;
                 flex-direction: column;
-                width: 100%;
+                position: absolute;
+                top: 60px; left: 0; width: 100%;
+                background-color: #003366;
+                padding: 20px 0;
+                text-align: center;
             }
-            nav li {
-                margin: 10px 0;
-            }
-            .container {
-                padding: 20px 10px;
-            }
-            select {
-                width: 100%;
-            }
-            .class-item {
-                display: block;
-                width: 100%;
-                margin: 10px 0;
-            }
-            button {
-                display: block;
-                width: 100%;
-                margin: 10px 0;
-            }
+            nav ul.active { display: flex; }
+            nav li { margin: 10px 0; }
+            
+            .selection-group { flex-direction: column; }
+            select, button#view-classes-btn { width: 100%; }
+            .class-list { grid-template-columns: 1fr; }
+            .container { padding: 20px 15px; }
+            .take-attendance { padding: 25px; }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
+
     <nav>
-        <div class="logo">Attendly</div>
-        <ul>
+        <div class="logo">📝 Attendly</div>
+        <div class="menu-toggle" id="mobile-menu">
+            <span></span><span></span><span></span>
+        </div>
+        <ul id="nav-list">
             <li><a href="faculty-dashboard.html">Dashboard</a></li>
             <li><a href="view-attendance.html">View All Attendance</a></li>
-            <li><a href="student-record.html">Student Records</a></li>
+            <li><a href="subject-records.html">Subject Records</a></li>
             <li><button onclick="logout()">Logout</button></li>
         </ul>
     </nav>
 
-    <!-- Take Attendance Content -->
     <div class="container">
         <div class="take-attendance">
             <h2>Take Attendance</h2>
-            <p>Select a subject and view the classes taking it.</p>
-            <select id="subject-select">
-                <option value="">-- Select a Subject --</option>
-                <!-- Subjects will be populated here dynamically -->
-            </select>
-            <button id="view-classes-btn">View Classes</button>
-            <div class="class-list" id="class-list">
-                <!-- Classes will be displayed here after clicking View Classes -->
+            <p class="subtitle">Select a subject to see assigned classes and start recording.</p>
+            
+            <div class="selection-group">
+                <select id="subject-select">
+                    <option value="">-- Select a Subject --</option>
+                </select>
+                <button id="view-classes-btn">View Classes</button>
             </div>
+
+            <div class="class-list" id="class-list">
+                </div>
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
-        <p>&copy; 2026 Attendly - University Attendance Management System</p>
+        <p>&copy; 2026 Attendly - PRMSU Castillejos Student Attendance Tracker</p>
     </footer>
 
     <script>
-        let subjects = []; // Will be loaded from backend
+        // Menu toggle logic
+        document.getElementById('mobile-menu').addEventListener('click', function() {
+            document.getElementById('nav-list').classList.toggle('active');
+        });
 
-        console.log('Script loaded'); // Debug: Confirm script runs
+        let subjects = [];
 
-        // Populate the subject dropdown on page load
         async function populateSubjects() {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -204,18 +253,17 @@
                 return;
             }
 
-            console.log('Populating subjects...'); // Debug
             try {
                 const response = await fetch('/api/subjects', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (!response.ok) throw new Error('Failed to fetch subjects');
                 subjects = await response.json();
-                console.log('Subjects loaded:', subjects); // Debug
+                
                 const select = document.getElementById('subject-select');
                 subjects.forEach((subj, index) => {
                     const option = document.createElement('option');
-                    option.value = index; // Use index as value
+                    option.value = index;
                     option.textContent = subj.name;
                     select.appendChild(option);
                 });
@@ -225,19 +273,10 @@
             }
         }
 
-        // Handle View Classes button click
         document.getElementById('view-classes-btn').addEventListener('click', function() {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                alert('Please sign in first.');
-                window.location.href = 'sign-in.html';
-                return;
-            }
-
-            console.log('View Classes button clicked'); // Debug
             const selectedIndex = document.getElementById('subject-select').value;
             const classList = document.getElementById('class-list');
-            classList.innerHTML = ''; // Clear previous classes
+            classList.innerHTML = '';
 
             if (selectedIndex === '') {
                 alert('Please select a subject first.');
@@ -245,14 +284,12 @@
             }
 
             const selectedSubject = subjects[selectedIndex];
-            console.log('Selected subject:', selectedSubject); // Debug
             if (!selectedSubject || !selectedSubject.assignedClasses || selectedSubject.assignedClasses.length === 0) {
-                alert('No classes assigned to this subject.');
+                classList.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #666;">No classes assigned to this subject.</p>';
                 return;
             }
 
             selectedSubject.assignedClasses.forEach(clsName => {
-                console.log('Creating class item for:', clsName); // Debug
                 const classDiv = document.createElement('div');
                 classDiv.className = 'class-item';
                 classDiv.textContent = clsName;
@@ -261,16 +298,11 @@
             });
         });
 
-        // Function to handle class selection (redirect to student list page with subject)
         function chooseClass(className, subjectName) {
-            console.log('chooseClass called with:', className, subjectName); // Debug
             const selectedSubject = subjects.find(subj => subj.name === subjectName);
-            if (!selectedSubject) {
-                alert('Subject not found.');
-                return;
-            }
+            if (!selectedSubject) return;
+            
             const url = `attendance-students.html?class=${encodeURIComponent(className)}&subject=${encodeURIComponent(subjectName)}&subjectId=${selectedSubject._id}`;
-            console.log('Redirecting to:', url); // Debug
             window.location.href = url;
         }
 
@@ -279,11 +311,7 @@
             window.location.href = 'sign-in.html';
         }
 
-        // Load subjects on page load
-        window.addEventListener('DOMContentLoaded', function() {
-            console.log('DOMContentLoaded fired'); // Debug
-            populateSubjects();
-        });
+        window.addEventListener('DOMContentLoaded', populateSubjects);
     </script>
 </body>
 </html>

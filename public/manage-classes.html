@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Classes</title>
+    <title>Manage Classes - Attendly</title>
     <style>
+        /* Core Layout & Pattern */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -14,134 +15,177 @@
             background-size: 20px 20px;
             background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
         }
+
+        /* Responsive Navigation */
         nav {
             background-color: #003366;
             color: white;
-            padding: 15px 20px;
+            padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
+            z-index: 1000;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+
         nav .logo {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
             font-family: Georgia, serif;
             color: #FFD700;
         }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            border-radius: 2px;
+        }
+
         nav ul {
             list-style: none;
             display: flex;
             margin: 0;
             padding: 0;
-            padding-top: 5px;
         }
-        nav li {
-            margin: 0 15px;
-        }
-        nav a {
+
+        nav li { margin: 0 15px; }
+
+        nav a, nav button.nav-logout {
             color: white;
             text-decoration: none;
             font-weight: bold;
             transition: color 0.3s;
-        }
-        nav a:hover {
-            color: #FFD700;
-        }
-        nav button {
             background: none;
             border: none;
-            color: white;
+            font-size: 14px;
             cursor: pointer;
-            font-weight: bold;
-            transition: color 0.3s;
+            padding: 0;
         }
-        nav button:hover {
-            color: #FFD700;
-        }
+
+        nav a:hover, nav button.nav-logout:hover { color: #FFD700; }
+
+        /* Container & Content */
         .container {
-            padding: 40px 20px;
-            max-width: 1200px;
+            padding: 20px;
+            max-width: 1000px;
             margin: 0 auto;
         }
+
         h2 {
             font-family: Georgia, serif;
             color: #003366;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
+
         .manage-classes {
             background-color: white;
-            padding: 30px;
+            padding: clamp(15px, 5vw, 30px);
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             border-top: 5px solid #003366;
         }
-        .class-list {
-            margin-top: 30px;
+
+        /* Responsive Input Group */
+        .create-class-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
         }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px; /* Best for mobile zoom */
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        button:hover { background-color: #45a049; }
+
+        /* Class & Student List Data Display */
+        .class-list { margin-top: 20px; }
+
         .class-item {
             background-color: #f9f9f9;
-            padding: 20px;
+            padding: 15px;
             margin: 15px 0;
             border-radius: 8px;
             border-left: 5px solid #4CAF50;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
+
         .class-item h4 {
-            margin: 0 0 15px 0;
-            font-family: Georgia, serif;
+            margin: 0 0 10px 0;
             color: #003366;
         }
+
         .student-list {
             list-style: none;
             padding: 0;
+            margin-top: 10px;
         }
+
         .student-list li {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 0;
+            padding: 10px 0;
             border-bottom: 1px solid #eee;
+            font-size: 14px;
         }
+
         .delete-btn {
             background-color: #f44336;
             color: white;
-            border: none;
             padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
             font-size: 12px;
+            margin: 0;
         }
-        .delete-btn:hover {
-            opacity: 0.8;
+
+        /* Mobile Breakpoints */
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+            nav ul {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 50px;
+                left: 0;
+                width: 100%;
+                background-color: #003366;
+                padding: 20px 0;
+                text-align: center;
+            }
+            nav ul.active { display: flex; }
+            nav li { margin: 15px 0; }
+            
+            .create-class-form { flex-direction: column; }
+            .create-class-form button { width: 100%; }
         }
-        input {
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            width: 250px;
-            font-size: 16px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            margin: 0 10px;
-            font-size: 16px;
-            font-weight: bold;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-        button:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-        }
+
         footer {
             text-align: center;
             padding: 20px;
@@ -149,72 +193,49 @@
             color: white;
             margin-top: 50px;
         }
-        @media (max-width: 768px) {
-            nav {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            nav ul {
-                flex-direction: column;
-                width: 100%;
-            }
-            nav li {
-                margin: 10px 0;
-            }
-            .container {
-                padding: 20px 10px;
-            }
-            input {
-                width: 100%;
-            }
-            .student-list li {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .class-item {
-                padding: 15px;
-            }
-            button {
-                margin: 5px 0;
-            }
-        }
     </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
     <nav>
         <div class="logo">📝 Attendly</div>
-        <ul>
+        <div class="menu-toggle" id="mobile-menu">
+            <span></span><span></span><span></span>
+        </div>
+        <ul id="nav-list">
             <li><a href="faculty-dashboard.html">Dashboard</a></li>
             <li><a href="manage-subjects.html">Manage Subjects</a></li>
             <li><a href="mark-attendance.html">Take Attendance</a></li>
             <li><a href="view-attendance.html">View All Attendance</a></li>
             <li><a href="subject-records.html">Student Records</a></li>
-            <li><button onclick="logout()">Logout</button></li>
+            <li><button class="nav-logout" onclick="logout()">Logout</button></li>
         </ul>
     </nav>
 
-    <!-- Manage Classes Content -->
     <div class="container">
         <div class="manage-classes">
             <h2>Manage Classes</h2>
-            <div>
+            <div class="create-class-form">
                 <input type="text" id="class-name" placeholder="Enter class name (e.g., BSCS 3A)">
                 <button onclick="createClass()">Create Class</button>
             </div>
             <div class="class-list" id="class-list">
-                <!-- Classes will be added here dynamically -->
-            </div>
+                </div>
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
-        <p>&copy; 2026 Attendly - University Attendance Management System</p>
+        <p>&copy; 2026 Attendly - PRMSU Castillejos Student Attendance Tracker</p>
     </footer>
 
     <script>
-        // Function to create a class
+        // Menu Toggle Logic
+        const menuToggle = document.getElementById('mobile-menu');
+        const navList = document.getElementById('nav-list');
+        menuToggle.addEventListener('click', () => {
+            navList.classList.toggle('active');
+        });
+
+        // --- ORIGINAL DATA LOGIC (UNTOUCHED) ---
         async function createClass() {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -222,125 +243,87 @@
                 window.location.href = 'sign-in.html';
                 return;
             }
-
             const className = document.getElementById('class-name').value.trim();
             if (!className) {
                 alert('Please enter a class name.');
                 return;
             }
-
             try {
                 const response = await fetch('/api/classes', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                     body: JSON.stringify({ name: className })
                 });
-
                 if (!response.ok) throw new Error('Failed to create class');
-
                 document.getElementById('class-name').value = '';
-                loadClasses(); // Refresh the list
+                loadClasses(); 
             } catch (error) {
                 console.error('Error creating class:', error);
                 alert('Error creating class');
             }
         }
 
-        // Function to add a student to a class
         async function addStudent(classId) {
             const token = localStorage.getItem('token');
-            if (!token) {
-                alert('Please sign in first.');
-                window.location.href = 'sign-in.html';
-                return;
-            }
-
+            if (!token) { alert('Please sign in first.'); window.location.href = 'sign-in.html'; return; }
             const studentName = prompt('Enter student name:');
             if (!studentName || !studentName.trim()) return;
-
             try {
                 const response = await fetch('/api/students', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                     body: JSON.stringify({ name: studentName.trim(), classId })
                 });
-
                 if (!response.ok) throw new Error('Failed to add student');
-
-                loadClasses(); // Refresh the list to show the new student
+                loadClasses(); 
             } catch (error) {
                 console.error('Error adding student:', error);
                 alert('Error adding student');
             }
         }
 
-        // Function to delete a class
         async function deleteClass(classId, className) {
             const token = localStorage.getItem('token');
-            if (!token) {
-                alert('Please sign in first.');
-                window.location.href = 'sign-in.html';
-                return;
-            }
-
+            if (!token) { alert('Please sign in first.'); window.location.href = 'sign-in.html'; return; }
             if (!confirm(`Are you sure you want to delete the class "${className}" and all its students?`)) return;
-
             try {
                 const response = await fetch(`/api/classes/${classId}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
-
                 if (!response.ok) throw new Error('Failed to delete class');
-
-                loadClasses(); // Refresh the list
+                loadClasses();
             } catch (error) {
                 console.error('Error deleting class:', error);
                 alert('Error deleting class');
             }
         }
 
-        // Function to delete a student
         async function deleteStudent(studentId, studentName) {
             const token = localStorage.getItem('token');
-            if (!token) {
-                alert('Please sign in first.');
-                window.location.href = 'sign-in.html';
-                return;
-            }
-
+            if (!token) { alert('Please sign in first.'); window.location.href = 'sign-in.html'; return; }
             if (!confirm(`Are you sure you want to delete the student "${studentName}"?`)) return;
-
             try {
                 const response = await fetch(`/api/students/${studentId}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
-
                 if (!response.ok) throw new Error('Failed to delete student');
-
-                loadClasses(); // Refresh the list
+                loadClasses();
             } catch (error) {
                 console.error('Error deleting student:', error);
                 alert('Error deleting student');
             }
         }
 
-        // Function to load and render classes
         async function loadClasses() {
             const token = localStorage.getItem('token');
-            if (!token) {
-                alert('Please sign in first.');
-                window.location.href = 'sign-in.html';
-                return;
-            }
-
+            if (!token) { window.location.href = 'sign-in.html'; return; }
             try {
                 const response = await fetch('/api/classes', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (!response.ok) throw new Error('Failed to fetch classes');
-
                 const classes = await response.json();
                 await renderClasses(classes);
             } catch (error) {
@@ -348,35 +331,28 @@
             }
         }
 
-        // Function to render classes in the UI, including fetching students
         async function renderClasses(classes) {
             const classList = document.getElementById('class-list');
-            classList.innerHTML = ''; // Clear existing list
-
+            classList.innerHTML = ''; 
             for (const cls of classes) {
                 const classDiv = document.createElement('div');
                 classDiv.className = 'class-item';
-
                 const classTitle = document.createElement('h4');
                 classTitle.textContent = cls.name;
-
                 const buttonsDiv = document.createElement('div');
+                buttonsDiv.style.display = 'flex';
+                buttonsDiv.style.gap = '10px';
                 const addStudentBtn = document.createElement('button');
                 addStudentBtn.textContent = 'Add Student';
                 addStudentBtn.onclick = () => addStudent(cls._id);
-
                 const deleteClassBtn = document.createElement('button');
                 deleteClassBtn.className = 'delete-btn';
                 deleteClassBtn.textContent = 'Delete Class';
                 deleteClassBtn.onclick = () => deleteClass(cls._id, cls.name);
-
                 buttonsDiv.appendChild(addStudentBtn);
                 buttonsDiv.appendChild(deleteClassBtn);
-
                 const studentUl = document.createElement('ul');
                 studentUl.className = 'student-list';
-
-                // Fetch students for this class
                 try {
                     const studentResponse = await fetch(`/api/students?classId=${cls._id}`, {
                         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
@@ -386,20 +362,17 @@
                         students.forEach(student => {
                             const li = document.createElement('li');
                             li.textContent = student.name;
-
                             const deleteStudentBtn = document.createElement('button');
                             deleteStudentBtn.className = 'delete-btn';
                             deleteStudentBtn.textContent = 'Delete';
                             deleteStudentBtn.onclick = () => deleteStudent(student._id, student.name);
-
                             li.appendChild(deleteStudentBtn);
                             studentUl.appendChild(li);
                         });
                     }
                 } catch (error) {
-                    console.error('Error fetching students for class:', cls._id, error);
+                    console.error('Error fetching students:', error);
                 }
-
                 classDiv.appendChild(classTitle);
                 classDiv.appendChild(buttonsDiv);
                 classDiv.appendChild(studentUl);
@@ -412,7 +385,6 @@
             window.location.href = 'sign-in.html';
         }
 
-        // Load classes on page load
         window.addEventListener('DOMContentLoaded', loadClasses);
     </script>
 </body>

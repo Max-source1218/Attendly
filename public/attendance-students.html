@@ -14,6 +14,8 @@
             background-size: 20px 20px;
             background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
         }
+
+        /* Navigation */
         nav {
             background-color: #003366;
             color: white;
@@ -23,125 +25,152 @@
             align-items: center;
             position: sticky;
             top: 0;
+            z-index: 1000;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+
         nav .logo {
             font-size: 28px;
             font-weight: bold;
             font-family: Georgia, serif;
             color: #FFD700;
         }
+
         nav ul {
             list-style: none;
             display: flex;
             margin: 0;
-            padding: 0;
-            padding-top: 5px;
+            padding: 5px 0 0 0;
         }
-        nav li {
-            margin: 0 15px;
-        }
-        nav a {
+
+        nav li { margin: 0 15px; }
+
+        nav a, nav button {
             color: white;
             text-decoration: none;
             font-weight: bold;
             transition: color 0.3s;
-        }
-        nav a:hover {
-            color: #FFD700;
-        }
-        nav button {
             background: none;
             border: none;
-            color: white;
             cursor: pointer;
-            font-weight: bold;
-            transition: color 0.3s;
+            font-size: 16px;
         }
-        nav button:hover {
-            color: #FFD700;
-        }
+
+        nav a:hover, nav button:hover { color: #FFD700; }
+
+        /* Container */
         .container {
             padding: 40px 20px;
-            max-width: 1200px;
+            max-width: 900px;
             margin: 0 auto;
         }
+
         h2 {
             font-family: Georgia, serif;
             color: #003366;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 5px;
         }
+
+        p.subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
         .student-list-section {
             background-color: white;
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             border-top: 5px solid #003366;
         }
+
+        /* Student List Styling */
         .student-list {
             list-style: none;
             padding: 0;
+            margin: 0;
         }
+
         .student-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #f9f9f9;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border-left: 5px solid #4CAF50;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            background-color: #fff;
+            padding: 18px 20px;
+            margin: 12px 0;
+            border-radius: 10px;
+            border: 1px solid #eee;
+            transition: all 0.2s ease;
         }
+
+        .student-item:hover {
+            border-color: #003366;
+            background-color: #fcfcfc;
+        }
+
         .student-name {
-            flex-grow: 1;
-            font-weight: bold;
-            color: #003366;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
         }
+
         .buttons {
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
-        button {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 6px;
+
+        .buttons button {
+            padding: 10px 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
             font-weight: bold;
-            transition: background-color 0.3s, transform 0.2s;
+            background-color: white;
+            color: #666;
+            transition: all 0.2s ease;
         }
-        button:hover {
-            transform: translateY(-2px);
-        }
-        .absent-btn {
-            background-color: #ccc;
-            color: black;
-        }
-        .present-btn {
-            background-color: #ccc;
-            color: black;
-        }
-        .absent-btn.active {
-            background-color: #f44336;
-            color: white;
-        }
+
+        /* Logic Styles */
         .present-btn.active {
-            background-color: #4CAF50;
-            color: white;
+            background-color: #4CAF50 !important;
+            color: white !important;
+            border-color: #4CAF50 !important;
+            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
         }
+
+        .absent-btn.active {
+            background-color: #f44336 !important;
+            color: white !important;
+            border-color: #f44336 !important;
+            box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
+        }
+
+        /* Submit Button */
         .submit-btn {
-            background-color: #2196F3;
+            background-color: #003366;
             color: white;
-            padding: 15px 30px;
-            margin-top: 30px;
+            padding: 18px;
+            margin-top: 40px;
             width: 100%;
-            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+
         .submit-btn:hover {
-            background-color: #1976D2;
+            background-color: #002244;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
+
         footer {
             text-align: center;
             padding: 20px;
@@ -149,42 +178,27 @@
             color: white;
             margin-top: 50px;
         }
+
+        /* Mobile */
         @media (max-width: 768px) {
-            nav {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            nav ul {
-                flex-direction: column;
-                width: 100%;
-            }
-            nav li {
-                margin: 10px 0;
-            }
-            .container {
-                padding: 20px 10px;
-            }
             .student-item {
                 flex-direction: column;
-                align-items: flex-start;
+                gap: 15px;
+                text-align: center;
             }
             .buttons {
-                margin-top: 10px;
-                flex-direction: column;
                 width: 100%;
             }
             .buttons button {
-                width: 100%;
-                margin: 5px 0;
+                flex: 1;
             }
-            .submit-btn {
-                padding: 12px;
-            }
+            .container { padding: 20px 10px; }
+            nav { padding: 15px; }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
+
     <nav>
         <div class="logo">📝 Attendly</div>
         <ul>
@@ -193,176 +207,152 @@
         </ul>
     </nav>
 
-    <!-- Student List Content -->
     <div class="container">
         <div class="student-list-section">
-            <h2 id="class-title">Students in Class</h2>
+            <h2 id="class-title">Attendance List</h2>
+            <p class="subtitle" id="subject-subtitle">Class Records</p>
+            
             <ul class="student-list" id="student-list">
-                <!-- Students will be displayed here -->
-            </ul>
-            <button class="submit-btn" onclick="submitAttendance()">Submit Attendance</button>
+                </ul>
+
+            <button class="submit-btn" onclick="submitAttendance()">✅ Finalize & Submit Attendance</button>
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
-        <p>&copy; 2026 Attendly - University Attendance Management System</p>
+        <p>&copy; 2026 Attendly - PRMSU Castillejos Student Attendance Tracker</p>
     </footer>
 
     <script>
-        // Get class name, subject name, and subjectId from URL
         const urlParams = new URLSearchParams(window.location.search);
         const className = urlParams.get('class');
         const subjectName = urlParams.get('subject');
-        const subjectId = urlParams.get('subjectId'); // Add this
+        const subjectId = urlParams.get('subjectId');
 
         if (!className || !subjectName || !subjectId) {
-            alert('No class, subject, or subjectId selected. Redirecting...');
+            alert('Missing session details. Returning to selection.');
             window.location.href = 'mark-attendance.html';
         }
 
         let classId, students = [];
-        let attendance = {}; // { studentId: 'present' or 'absent' }
+        let attendance = {};
 
-        // Load class, subject, and students
         async function loadData() {
             const token = localStorage.getItem('token');
             if (!token) {
-                alert('Please sign in first.');
                 window.location.href = 'sign-in.html';
                 return;
             }
 
             try {
-                // Fetch classes to get classId
-                const classResponse = await fetch('/api/classes', { headers: { 'Authorization': `Bearer ${token}` } });
-                if (!classResponse.ok) throw new Error('Failed to fetch classes');
+                // Set titles
+                document.getElementById('class-title').textContent = `Mark Attendance: ${className}`;
+                document.getElementById('subject-subtitle').textContent = `Subject: ${subjectName}`;
 
+                // Fetch classes to get classId
+                const classResponse = await fetch('/api/classes', { 
+                    headers: { 'Authorization': `Bearer ${token}` } 
+                });
                 const classes = await classResponse.json();
                 const selectedClass = classes.find(cls => cls.name === className);
 
-                if (!selectedClass) throw new Error('Class not found');
-
+                if (!selectedClass) throw new Error('Class mapping failed');
                 classId = selectedClass._id;
 
-                document.getElementById('class-title').textContent = `Mark Attendance for ${className}`;
-
-                // Fetch students, now filtered by subjectId
+                // Fetch students for this class/subject
                 const studentResponse = await fetch(`/api/students?classId=${classId}&subjectId=${subjectId}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
-                if (!studentResponse.ok) throw new Error('Failed to fetch students');
                 students = await studentResponse.json();
 
-                console.log('Students loaded:', students); // Debug
                 renderStudents();
             } catch (error) {
-                console.error('Error loading data:', error);
-                alert('Error loading data: ' + error.message);
+                console.error(error);
+                alert('Initialization Error: ' + error.message);
             }
         }
 
-        // Render students
         function renderStudents() {
             const studentList = document.getElementById('student-list');
             studentList.innerHTML = '';
 
-            if (students.length > 0) {
-                students.forEach(student => {
-                    const li = document.createElement('li');
-                    li.className = 'student-item';
-
-                    const nameDiv = document.createElement('div');
-                    nameDiv.className = 'student-name';
-                    nameDiv.textContent = student.name;
-
-                    const buttonsDiv = document.createElement('div');
-                    buttonsDiv.className = 'buttons';
-
-                    const absentBtn = document.createElement('button');
-                    absentBtn.className = 'absent-btn';
-                    absentBtn.textContent = 'Absent';
-                    absentBtn.onclick = () => markAttendance(student._id, 'absent', absentBtn, presentBtn);
-
-                    const presentBtn = document.createElement('button');
-                    presentBtn.className = 'present-btn';
-                    presentBtn.textContent = 'Present';
-                    presentBtn.onclick = () => markAttendance(student._id, 'present', absentBtn, presentBtn);
-
-                    buttonsDiv.appendChild(absentBtn);
-                    buttonsDiv.appendChild(presentBtn);
-
-                    li.appendChild(nameDiv);
-                    li.appendChild(buttonsDiv);
-                    studentList.appendChild(li);
-                });
-            } else {
-                const li = document.createElement('li');
-                li.className = 'student-item';
-                li.textContent = 'No students added to this class yet.';
-                studentList.appendChild(li);
-            }
-        }
-
-        // Mark attendance
-        function markAttendance(studentId, status, absentBtn, presentBtn) {
-            attendance[studentId] = status;
-            absentBtn.classList.toggle('active', status === 'absent');
-            presentBtn.classList.toggle('active', status === 'present');
-        }
-
-        // Submit attendance
-        async function submitAttendance() {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                alert('Please sign in first.');
-                window.location.href = 'sign-in.html';
+            if (students.length === 0) {
+                studentList.innerHTML = '<li class="student-item">No students enrolled in this class for this subject.</li>';
                 return;
             }
 
+            students.forEach(student => {
+                const li = document.createElement('li');
+                li.className = 'student-item';
+
+                const nameDiv = document.createElement('div');
+                nameDiv.className = 'student-name';
+                nameDiv.textContent = student.name;
+
+                const buttonsDiv = document.createElement('div');
+                buttonsDiv.className = 'buttons';
+
+                const absentBtn = document.createElement('button');
+                absentBtn.className = 'absent-btn';
+                absentBtn.textContent = 'Absent';
+                
+                const presentBtn = document.createElement('button');
+                presentBtn.className = 'present-btn';
+                presentBtn.textContent = 'Present';
+
+                // Event handlers
+                absentBtn.onclick = () => {
+                    attendance[student._id] = 'absent';
+                    absentBtn.classList.add('active');
+                    presentBtn.classList.remove('active');
+                };
+
+                presentBtn.onclick = () => {
+                    attendance[student._id] = 'present';
+                    presentBtn.classList.add('active');
+                    absentBtn.classList.remove('active');
+                };
+
+                buttonsDiv.appendChild(presentBtn); // Present first for UX
+                buttonsDiv.appendChild(absentBtn);
+                li.appendChild(nameDiv);
+                li.appendChild(buttonsDiv);
+                studentList.appendChild(li);
+            });
+        }
+
+        async function submitAttendance() {
+            const token = localStorage.getItem('token');
             const records = Object.keys(attendance).map(studentId => ({
                 studentId,
                 status: attendance[studentId]
             }));
 
-            if (records.length === 0) {
-                alert('No attendance marked.');
+            if (records.length < students.length) {
+                alert(`Warning: You have only marked ${records.length} out of ${students.length} students.`);
                 return;
             }
 
-            if (!confirm('Are you sure you want to submit this attendance?')) return;
-
-            console.log('Submitting attendance with:', { classId, subjectId, records }); // Debug: Sent data
+            if (!confirm('Confirm attendance submission for today?')) return;
 
             try {
                 const response = await fetch('/api/attendance', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    headers: { 
+                        'Content-Type': 'application/json', 
+                        'Authorization': `Bearer ${token}` 
+                    },
                     body: JSON.stringify({ classId, subjectId, records })
                 });
 
-                console.log('Response status:', response.status); // Debug: Status code
-                console.log('Response:', response); // Debug: Full response
-
-                if (!response.ok) {
-                    const errorText = await response.text(); // Debug: Error details
-                    console.log('Error response:', errorText);
-                    throw new Error(`Failed to submit attendance: ${response.status} - ${errorText}`);
-                }
+                if (!response.ok) throw new Error('Server rejected submission');
 
                 const data = await response.json();
-                alert(`Attendance submitted successfully!\nPresent: ${data.presentCount}\nAbsent: ${data.absentCount}\nDate: ${new Date(data.date).toLocaleString()}`);
+                alert('Attendance recorded successfully!');
+                window.location.href = 'faculty-dashboard.html';
                 
-                // Redirect to dashboard after success
-                setTimeout(() => {
-                    window.location.href = 'faculty-dashboard.html';
-                }, 2000); // 2-second delay to show the alert
-
-                attendance = {}; // Reset
-                renderStudents(); // Reset buttons
             } catch (error) {
-                console.error('Error submitting attendance:', error);
-                alert('Error submitting attendance: ' + error.message);
+                alert('Submission failed: ' + error.message);
             }
         }
 
@@ -371,7 +361,6 @@
             window.location.href = 'sign-in.html';
         }
 
-        // Load on page load
         window.addEventListener('DOMContentLoaded', loadData);
     </script>
 </body>
