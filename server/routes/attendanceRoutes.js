@@ -77,13 +77,21 @@ router.get('/', async (req, res) => {
 });
 
 // GET /api/attendance/student-records: Get aggregated student attendance per class
+// GET /api/attendance/student-records: Get aggregated student attendance per class
+// GET /api/attendance/student-records: Get aggregated student attendance per class (optionally filtered by subjectId and classId)
 router.get('/student-records', async (req, res) => {
   try {
     const userId = req.user.id;
-    console.log('Fetching for userId:', userId); // Debug
+    const { subjectId, classId } = req.query; // Get optional filters
+
+    console.log('Fetching student records for userId:', userId, 'subjectId:', subjectId, 'classId:', classId);
+
+    let matchStage = { userId: new mongoose.Types.ObjectId(userId) };
+    if (subjectId) matchStage.subjectId = new mongoose.Types.ObjectId(subjectId);
+    if (classId) matchStage.classId = new mongoose.Types.ObjectId(classId);
 
     const aggregatedStats = await Attendance.aggregate([
-      { $match: { userId: new mongoose.Types.ObjectId(userId) } }, // Fixed: Add 'new'
+      { $match: matchStage }, // Apply filters here
       { $unwind: '$records' },
       {
         $group: {
@@ -116,6 +124,7 @@ router.get('/student-records', async (req, res) => {
           className: { $first: '$classInfo.name' },
           students: {
             $push: {
+              studentId: '$studentInfo._id',
               studentName: '$studentInfo.name',
               presentCount: '$presentCount',
               absentCount: '$absentCount'
@@ -125,10 +134,95 @@ router.get('/student-records', async (req, res) => {
       }
     ]);
 
-    console.log('Aggregated stats:', aggregatedStats); // Debug
+    console.log('Filtered aggregated stats:', aggregatedStats);
     res.json(aggregatedStats);
   } catch (err) {
     console.error('Error in student-records:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/attendance/subject-records: Get attendance records grouped by subject and class
+router.get('/subject-records', async (req, res) => {
+  try {
+    const userId = req.user.id;
+    console.log('Fetching subject records for userId:', userId);
+
+    const subjectStats = await Attendance.aggregate([
+      { $match: { userId: new mongoose.Types.ObjectId(userId) } },
+      { $unwind: '$records' },
+      {
+        $group: {
+          _id: { subjectId: '$subjectId', classId: '$classId', studentId: '$records.studentId' },
+          presentCount: { $sum: { $cond: [{ $eq: ['$records.status', 'present'] }, 1, 0] } },
+          absentCount: { $sum: { $cond: [{ $eq: ['$records.status', 'absent'] }, 1, 0] } }
+        }
+      },
+      {
+        $lookup: {
+          from: 'subjects',
+          localField: '_id.subjectId',
+          foreignField: '_id',
+          as: 'subjectInfo'
+        }
+      },
+      {
+        $lookup: {
+          from: 'classes',
+          localField: '_id.classId',
+          foreignField: '_id',
+          as: 'classInfo'
+        }
+      },
+      {
+        $lookup: {
+          from: 'students',
+          localField: '_id.studentId',
+          foreignField: '_id',
+          as: 'studentInfo'
+        }
+      },
+      { $unwind: { path: '$subjectInfo', preserveNullAndEmptyArrays: true } },
+      { $unwind: { path: '$classInfo', preserveNullAndEmptyArrays: true } },
+      { $unwind: { path: '$studentInfo', preserveNullAndEmptyArrays: true } },
+      {
+        $group: {
+          _id: { subjectId: '$_id.subjectId', classId: '$_id.classId' },
+          subjectName: { $first: '$subjectInfo.name' },
+          className: { $first: '$classInfo.name' },
+          totalPresents: { $sum: '$presentCount' },
+          totalAbsences: { $sum: '$absentCount' },
+          students: {
+            $push: {
+              studentId: '$studentInfo._id',
+              studentName: '$studentInfo.name',
+              presentCount: '$presentCount',
+              absentCount: '$absentCount'
+            }
+          }
+        }
+      },
+      {
+        $group: {
+          _id: '$_id.subjectId',
+          subjectName: { $first: '$subjectName' },
+          classes: {
+            $push: {
+              classId: '$_id.classId',
+              className: '$className',
+              totalPresents: '$totalPresents',
+              totalAbsences: '$totalAbsences',
+              students: '$students'
+            }
+          }
+        }
+      }
+    ]);
+
+    console.log('Subject stats:', subjectStats);
+    res.json(subjectStats);
+  } catch (err) {
+    console.error('Error in subject-records:', err);
     res.status(500).json({ error: err.message });
   }
 });

@@ -105,6 +105,18 @@
         .absent-count {
             color: #f44336;
         }
+        .drop-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .drop-btn:hover {
+            opacity: 0.8;
+        }
         footer {
             text-align: center;
             padding: 20px;
@@ -170,68 +182,115 @@
 
     <script>
         // Load and display student records
-        async function loadStudentRecords() {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                alert('Please sign in first.');
-                window.location.href = 'sign-in.html';
-                return;
-            }
+        // In student-record.html, update loadStudentRecords to filter by subjectId and classId if provided
+async function loadStudentRecords() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert('Please sign in first.');
+        window.location.href = 'sign-in.html';
+        return;
+    }
 
-            try {
-                const response = await fetch('/api/attendance/student-records', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                if (!response.ok) throw new Error('Failed to fetch student records');
+    const urlParams = new URLSearchParams(window.location.search);
+    const subjectId = urlParams.get('subjectId');
+    const classId = urlParams.get('classId');
 
-                const records = await response.json();
-                console.log('Fetched records:', records); // Debug
-                renderRecords(records);
-            } catch (error) {
-                console.error('Error loading student records:', error);
-                alert('Error loading student records: ' + error.message);
-            }
+    try {
+        let url = '/api/attendance/student-records';
+        if (subjectId && classId) {
+            url += `?subjectId=${subjectId}&classId=${classId}`;
         }
 
-        // Render student records
-        function renderRecords(records) {
-            const recordsList = document.getElementById('records-list');
-            recordsList.innerHTML = '';
+        const response = await fetch(url, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) throw new Error('Failed to fetch student records');
 
-            if (records.length === 0) {
-                recordsList.innerHTML = '<p>No student records found.</p>';
-                return;
-            }
+        const records = await response.json();
+        console.log('Fetched records:', records);
+        renderRecords(records);
+    } catch (error) {
+        console.error('Error loading student records:', error);
+        alert('Error loading student records: ' + error.message);
+    }
+}
 
-            records.forEach(record => {
-                const classDiv = document.createElement('div');
-                classDiv.className = 'class-record';
-                classDiv.innerHTML = `<h3>Class: ${record.className}</h3>`;
+        // Update the renderRecords function to include subjectId and classId in the button
+function renderRecords(records) {
+    const recordsList = document.getElementById('records-list');
+    recordsList.innerHTML = '';
 
-                const table = document.createElement('table');
-                table.innerHTML = `
-                    <thead>
-                        <tr>
-                            <th>Student Name</th>
-                            <th>Total Presents</th>
-                            <th>Total Absences</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${record.students.map(student => `
-                            <tr>
-                                <td>${student.studentName}</td>
-                                <td class="present-count">${student.presentCount}</td>
-                                <td class="absent-count">${student.absentCount}</td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                `;
+    if (records.length === 0) {
+        recordsList.innerHTML = '<p>No student records found.</p>';
+        return;
+    }
 
-                classDiv.appendChild(table);
-                recordsList.appendChild(classDiv);
-            });
-        }
+    const urlParams = new URLSearchParams(window.location.search);
+    const subjectId = urlParams.get('subjectId');
+    const classId = urlParams.get('classId');
+
+    records.forEach(record => {
+        const classDiv = document.createElement('div');
+        classDiv.className = 'class-record';
+        classDiv.innerHTML = `<h3>Class: ${record.className}</h3>`;
+
+        const table = document.createElement('table');
+        const tbody = document.createElement('tbody');
+
+        // Add header
+        tbody.innerHTML = `
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Total Presents</th>
+                    <th>Total Absences</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+        `;
+
+        record.students.forEach(student => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${student.studentName}</td>
+                <td class="present-count">${student.presentCount}</td>
+                <td class="absent-count">${student.absentCount}</td>
+                <td>${student.absentCount >= 3 ? `<button class="drop-btn" onclick="dropStudent('${student.studentId}', '${student.studentName}', '${subjectId}', '${classId}')">Drop from Subject</button>` : ''}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        table.appendChild(tbody);
+        classDiv.appendChild(table);
+        recordsList.appendChild(classDiv);
+    });
+}
+
+// Update dropStudent function to include subjectId and classId
+async function dropStudent(studentId, studentName, subjectId, classId) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert('Please sign in first.');
+        window.location.href = 'sign-in.html';
+        return;
+    }
+
+    if (!confirm(`Are you sure you want to drop ${studentName} from this subject? This will remove their attendance records for this subject-class only.`)) return;
+
+    try {
+        const response = await fetch(`/api/students/${studentId}?subjectId=${subjectId}&classId=${classId}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) throw new Error('Failed to drop student from subject');
+
+        alert(`${studentName} has been dropped from this subject.`);
+        loadStudentRecords(); // Refresh the records
+    } catch (error) {
+        console.error('Error dropping student from subject:', error);
+        alert('Error dropping student from subject: ' + error.message);
+    }
+}
 
         function logout() {
             localStorage.removeItem('token');

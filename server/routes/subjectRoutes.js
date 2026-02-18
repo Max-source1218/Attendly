@@ -28,12 +28,13 @@ router.post('/', async (req, res) => {
 });
 
 // PUT /api/subjects/:id: Update subject assignments
+// PUT /api/subjects/:id: Update subject assignments and exclusions
 router.put('/:id', async (req, res) => {
   try {
-    const { assignedClasses } = req.body;
+    const { assignedClasses, excludedStudents } = req.body;
     const updatedSubject = await Subject.findOneAndUpdate(
       { _id: req.params.id, userId: req.user.id },
-      { assignedClasses },
+      { assignedClasses, excludedStudents },
       { new: true }
     );
     if (!updatedSubject) return res.status(404).json({ error: 'Subject not found or not owned by you' });

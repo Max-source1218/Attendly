@@ -210,17 +210,18 @@
     </footer>
 
     <script>
-        // Get class name and subject from URL
+        // Get class name, subject name, and subjectId from URL
         const urlParams = new URLSearchParams(window.location.search);
         const className = urlParams.get('class');
         const subjectName = urlParams.get('subject');
+        const subjectId = urlParams.get('subjectId'); // Add this
 
-        if (!className || !subjectName) {
-            alert('No class or subject selected. Redirecting...');
+        if (!className || !subjectName || !subjectId) {
+            alert('No class, subject, or subjectId selected. Redirecting...');
             window.location.href = 'mark-attendance.html';
         }
 
-        let classId, subjectId, students = [];
+        let classId, students = [];
         let attendance = {}; // { studentId: 'present' or 'absent' }
 
         // Load class, subject, and students
@@ -233,33 +234,27 @@
             }
 
             try {
-                // Fetch classes and subjects to get IDs
-                const [classResponse, subjectResponse] = await Promise.all([
-                    fetch('/api/classes', { headers: { 'Authorization': `Bearer ${token}` } }),
-                    fetch('/api/subjects', { headers: { 'Authorization': `Bearer ${token}` } })
-                ]);
-                if (!classResponse.ok || !subjectResponse.ok) throw new Error('Failed to fetch data');
+                // Fetch classes to get classId
+                const classResponse = await fetch('/api/classes', { headers: { 'Authorization': `Bearer ${token}` } });
+                if (!classResponse.ok) throw new Error('Failed to fetch classes');
 
                 const classes = await classResponse.json();
-                const subjects = await subjectResponse.json();
-
                 const selectedClass = classes.find(cls => cls.name === className);
-                const selectedSubject = subjects.find(subj => subj.name === subjectName);
 
-                if (!selectedClass || !selectedSubject) throw new Error('Class or subject not found');
+                if (!selectedClass) throw new Error('Class not found');
 
                 classId = selectedClass._id;
-                subjectId = selectedSubject._id;
 
                 document.getElementById('class-title').textContent = `Mark Attendance for ${className}`;
 
-                // Fetch students
-                const studentResponse = await fetch(`/api/students?classId=${classId}`, {
+                // Fetch students, now filtered by subjectId
+                const studentResponse = await fetch(`/api/students?classId=${classId}&subjectId=${subjectId}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (!studentResponse.ok) throw new Error('Failed to fetch students');
                 students = await studentResponse.json();
 
+                console.log('Students loaded:', students); // Debug
                 renderStudents();
             } catch (error) {
                 console.error('Error loading data:', error);
@@ -321,7 +316,7 @@
             const token = localStorage.getItem('token');
             if (!token) {
                 alert('Please sign in first.');
-                window.location.href = 'signin.html';
+                window.location.href = 'sign-in.html';
                 return;
             }
 

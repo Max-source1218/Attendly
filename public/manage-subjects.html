@@ -137,6 +137,52 @@
         .delete-btn {
             background-color: #f44336;
         }
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow: auto;
+        }
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 80%;
+            overflow-y: auto;
+        }
+        .modal h3 {
+            margin-top: 0;
+            color: #003366;
+        }
+        .class-exclusion {
+            margin-bottom: 20px;
+        }
+        .student-list {
+            margin-left: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .student-list label {
+            display: block;
+            margin: 5px 0;
+        }
+        .modal-buttons {
+            text-align: right;
+            margin-top: 20px;
+        }
+        .cancel-btn {
+            background-color: #ccc;
+            color: black;
+        }
         footer {
             text-align: center;
             padding: 20px;
@@ -169,6 +215,10 @@
                 margin: 5px 0;
                 width: 100%;
             }
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
         }
     </style>
 </head>
@@ -181,10 +231,25 @@
             <li><a href="manage-classes.html">Manage Classes</a></li>
             <li><a href="mark-attendance.html">Take Attendance</a></li>
             <li><a href="view-attendance.html">View All Attendance</a></li>
-            <li><a href="student-record.html">Student Records</a></li>
+            <li><a href="subject-records.html">Student Records</a></li>
             <li><button onclick="logout()">Logout</button></li>
         </ul>
     </nav>
+
+    <!-- Modal for Exclusions -->
+    <div id="exclusion-modal" class="modal">
+        <div class="modal-content">
+            <h3>Exclude Irregular Students</h3>
+            <p>Select students to exclude from each assigned class for this subject.</p>
+            <div id="modal-classes">
+                <!-- Classes and students will be populated here -->
+            </div>
+            <div class="modal-buttons">
+                <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+                <button onclick="saveExclusions()">Save Exclusions</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Manage Subjects Content -->
     <div class="container">
@@ -208,6 +273,7 @@
     <script>
         let classes = []; // Will be loaded from backend
         let subjects = []; // Will be loaded from backend
+        let currentSubjectId = null; // For modal
 
         // Function to create a subject
         async function createSubject() {
@@ -247,38 +313,115 @@
             }
         }
 
-        // Function to assign classes to a subject
-        async function assignClasses(subjectId) {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                alert('Please sign in first.');
-                window.location.href = 'signin.html';
-                return;
-            }
+        // Function to open modal for exclusions
+        function openExclusionModal(subjectId) {
+            currentSubjectId = subjectId;
+            const modalClasses = document.getElementById('modal-classes');
+            modalClasses.innerHTML = '';
 
             const checkboxes = document.querySelectorAll(`input[name="class-${subjectId}"]:checked`);
             const assignedClasses = Array.from(checkboxes).map(cb => cb.value);
 
+            if (assignedClasses.length === 0) {
+                alert('Please assign at least one class first.');
+                return;
+            }
+
+            assignedClasses.forEach(clsName => {
+                const classDiv = document.createElement('div');
+                classDiv.className = 'class-exclusion';
+                classDiv.innerHTML = `<strong>Class: ${clsName}</strong>`;
+
+                const studentList = document.createElement('div');
+                studentList.className = 'student-list';
+
+                // Find the class object
+                const cls = classes.find(c => c.name === clsName);
+                if (cls) {
+                    fetch(`/api/students?classId=${cls._id}`, {
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                    })
+                    .then(response => response.json())
+                    .then(students => {
+                        students.forEach(student => {
+                            const label = document.createElement('label');
+                            const checkbox = document.createElement('input');
+                            checkbox.type = 'checkbox';
+                            checkbox.name = `exclude-${clsName}`;
+                            checkbox.value = student._id;
+
+                            // Check if already excluded
+                            const subj = subjects.find(s => s._id === subjectId);
+                            const exclusion = subj.excludedStudents && subj.excludedStudents.find(ex => ex.className === clsName);
+                            if (exclusion && exclusion.studentIds && exclusion.studentIds.some(id => id === student._id)) {
+                                checkbox.checked = true;
+                            }
+
+                            label.appendChild(checkbox);
+                            label.appendChild(document.createTextNode(` ${student.name}`));
+                            studentList.appendChild(label);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching students:', error));
+                }
+
+                classDiv.appendChild(studentList);
+                modalClasses.appendChild(classDiv);
+            });
+
+            document.getElementById('exclusion-modal').style.display = 'block';
+        }
+
+        // Function to save exclusions and assign classes
+        async function saveExclusions() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Please sign in first.');
+                window.location.href = 'sign-in.html';
+                return;
+            }
+
+            const checkboxes = document.querySelectorAll(`input[name="class-${currentSubjectId}"]:checked`);
+            const assignedClasses = Array.from(checkboxes).map(cb => cb.value);
+
+            const excludedStudents = [];
+            assignedClasses.forEach(clsName => {
+                const exclusionCheckboxes = document.querySelectorAll(`input[name="exclude-${clsName}"]:checked`);
+                if (exclusionCheckboxes.length > 0) {
+                    excludedStudents.push({
+                        className: clsName,
+                        studentIds: Array.from(exclusionCheckboxes).map(cb => cb.value)
+                    });
+                }
+            });
+
             try {
-                const response = await fetch(`/api/subjects/${subjectId}`, {
+                const response = await fetch(`/api/subjects/${currentSubjectId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                    body: JSON.stringify({ assignedClasses })
+                    body: JSON.stringify({ assignedClasses, excludedStudents })
                 });
 
                 if (!response.ok) {
-                    console.log('Assign classes response status:', response.status);
+                    console.log('Save exclusions response status:', response.status);
                     throw new Error(`Failed to update assignments: ${response.status}`);
                 }
 
                 const data = await response.json(); // Parse response
                 console.log('Updated subject:', data);
 
+                closeModal();
                 loadData(); // Refresh the list
             } catch (error) {
-                console.error('Error updating assignments:', error);
-                alert('Error updating assignments: ' + error.message);
+                console.error('Error saving exclusions:', error);
+                alert('Error saving exclusions: ' + error.message);
             }
+        }
+
+        // Function to close modal
+        function closeModal() {
+            document.getElementById('exclusion-modal').style.display = 'none';
+            currentSubjectId = null;
         }
 
         // Function to delete a subject
@@ -286,7 +429,7 @@
             const token = localStorage.getItem('token');
             if (!token) {
                 alert('Please sign in first.');
-                window.location.href = 'signin.html';
+                window.location.href = 'sign-in.html';
                 return;
             }
 
@@ -318,7 +461,7 @@
             const token = localStorage.getItem('token');
             if (!token) {
                 alert('Please sign in first.');
-                window.location.href = 'signin.html';
+                window.location.href = 'sign-in.html';
                 return;
             }
 
@@ -368,7 +511,7 @@
                     checkbox.type = 'checkbox';
                     checkbox.name = `class-${subj._id}`;
                     checkbox.value = cls.name;
-                    checkbox.checked = subj.assignedClasses.includes(cls.name);
+                    checkbox.checked = subj.assignedClasses && subj.assignedClasses.includes(cls.name);
                     label.appendChild(checkbox);
                     label.appendChild(document.createTextNode(` ${cls.name}`));
                     assignDiv.appendChild(label);
@@ -376,15 +519,17 @@
 
                 const assignBtn = document.createElement('button');
                 assignBtn.textContent = 'Update Assignments';
-                assignBtn.onclick = () => assignClasses(subj._id);
+                assignBtn.onclick = () => openExclusionModal(subj._id);
 
                 const assignedUl = document.createElement('ul');
                 assignedUl.className = 'assigned-classes-list';
-                subj.assignedClasses.forEach(clsName => {
-                    const li = document.createElement('li');
-                    li.textContent = clsName;
-                    assignedUl.appendChild(li);
-                });
+                if (subj.assignedClasses) {
+                    subj.assignedClasses.forEach(clsName => {
+                        const li = document.createElement('li');
+                        li.textContent = clsName;
+                        assignedUl.appendChild(li);
+                    });
+                }
 
                 subjectDiv.appendChild(subjectTitle);
                 subjectDiv.appendChild(deleteBtn);
