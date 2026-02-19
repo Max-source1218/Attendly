@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | Attendly</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        nav {
+            background-color: #003366;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        nav .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #FFD700;
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            border-radius: 2px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, #003366 0%, #005580 100%);
+            padding: 40px 20px 60px;
+            text-align: center;
+            position: relative;
+        }
+
+        .profile-avatar-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-top: -85px;
+        }
+
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            color: #003366;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin: 0 auto;
+            margin-top: 100px;
+        }
+
+        .profile-avatar-placeholder {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid white;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            color: #003366;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin: 0 auto;
+            margin-top: 100px;
+        }
+
+        .upload-btn {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: #FFD700;
+            border: 3px solid white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .upload-btn:hover {
+            transform: scale(1.15);
+            background: #FFC107;
+        }
+
+        .upload-btn i {
+            color: #003366;
+            font-size: 16px;
+        }
+
+        #photo-input {
+            display: none;
+        }
+
+        .profile-name {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .profile-body {
+            padding: 40px;
+        }
+
+        .info-group {
+            margin-bottom: 25px;
+        }
+
+        .info-group label {
+            display: block;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-group .info-value {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .info-group .info-value i {
+            width: 30px;
+            color: #003366;
+            margin-right: 10px;
+        }
+
+        .info-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            background: #f8f9fa;
+        }
+
+        .info-group input:focus {
+            border-color: #FFD700;
+            outline: none;
+            background: white;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #003366;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            border: 1px solid #f5c6cb;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #003366;
+            color: white;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background-color: #003366;
+                padding: 20px;
+                gap: 15px;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .container {
+                margin: 20px auto;
+                padding: 0 15px;
+            }
+
+            .profile-body {
+                padding: 20px;
+            }
+
+            .profile-avatar-wrapper {
+                margin-top: -70px;
+            }
+
+            .profile-avatar, .profile-avatar-placeholder {
+                width: 120px;
+                height: 120px;
+            }
+
+            .upload-btn {
+                width: 35px;
+                height: 35px;
+                bottom: 3px;
+                right: 3px;
+            }
+
+            .upload-btn i {
+                font-size: 14px;
+            }
+
+            .profile-name {
+                font-size: 22px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">📝 Attendly</div>
+        <div class="menu-toggle" id="mobile-menu">
+            <span></span><span></span><span></span>
+        </div>
+        <ul class="nav-links" id="nav-list">
+            <li><a href="faculty-dashboard.html">Dashboard</a></li>
+            <li><a href="manage-classes.html">Classes</a></li>
+            <li><a href="manage-subjects.html">Subjects</a></li>
+            <li><a href="mark-attendance.html">Attendance</a></li>
+            <li><a href="#" onclick="logout()">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-avatar-wrapper">
+                    <img src="" alt="Profile Photo" id="profile-photo" class="profile-avatar" style="display: none;">
+                    <div class="profile-avatar-placeholder" id="avatar-placeholder">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <button class="upload-btn" onclick="document.getElementById('photo-input').click()">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                    <input type="file" id="photo-input" accept="image/*" onchange="handlePhotoUpload(event)">
+                </div>
+                <div class="profile-name" id="display-name">Loading...</div>
+            </div>
+
+            <div class="profile-body">
+                <div class="success-message" id="success-message">Profile updated successfully!</div>
+                <div class="error-message" id="error-message">Error updating profile!</div>
+
+                <div class="info-group">
+                    <label>Full Name</label>
+                    <input type="text" id="username" placeholder="Enter your full name">
+                </div>
+
+                <div class="info-group">
+                    <label>User ID</label>
+                    <div class="info-value">
+                        <i class="fas fa-id-card"></i>
+                        <span id="display-userid">Loading...</span>
+                    </div>
+                </div>
+
+                <div class="info-group">
+                    <label>Department</label>
+                    <input type="text" id="department" placeholder="Enter your department">
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+                    <button class="btn btn-secondary" onclick="window.location.href='faculty-dashboard.html'">Back to Dashboard</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Attendly - PRMSU Castillejos Student Attendance Tracker</p>
+    </footer>
+
+    <script>
+        const menuToggle = document.getElementById('mobile-menu');
+        const navList = document.getElementById('nav-list');
+
+        menuToggle.addEventListener('click', () => {
+            navList.classList.toggle('active');
+        });
+
+        let currentPhoto = null;
+
+        async function loadProfile() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Please sign in first.');
+                window.location.href = 'sign-in.html';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/auth/profile', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load profile');
+                }
+
+                const user = await response.json();
+                
+                document.getElementById('display-name').textContent = user.username || 'User';
+                document.getElementById('display-userid').textContent = user.userId || 'N/A';
+                document.getElementById('username').value = user.username || '';
+                document.getElementById('department').value = user.department || '';
+
+                if (user.photo) {
+                    document.getElementById('profile-photo').src = user.photo;
+                    document.getElementById('profile-photo').style.display = 'block';
+                    document.getElementById('avatar-placeholder').style.display = 'none';
+                    currentPhoto = user.photo;
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                document.getElementById('error-message').textContent = 'Error loading profile data';
+                document.getElementById('error-message').style.display = 'block';
+            }
+        }
+
+        function handlePhotoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentPhoto = e.target.result;
+                document.getElementById('profile-photo').src = currentPhoto;
+                document.getElementById('profile-photo').style.display = 'block';
+                document.getElementById('avatar-placeholder').style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+
+    async function saveProfile() {
+        
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert('Please sign in first.');
+        window.location.href = 'sign-in.html';
+        return;
+    }
+
+    const username = document.getElementById('username').value.trim();
+    const department = document.getElementById('department').value.trim();
+
+    if (!username || !department) {
+        document.getElementById('error-message').textContent = 'Please fill in all fields';
+        document.getElementById('error-message').style.display = 'block';
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/auth/profile', {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, department, photo: currentPhoto })
+        });
+
+        // Check if response is JSON
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+            const text = await response.text();
+            console.error("Expected JSON but got:", text);
+            throw new Error("API endpoint not found. Check server.js routes.");
+        }
+
+        const user = await response.json();
+        
+        document.getElementById('display-name').textContent = user.username;
+        document.getElementById('success-message').style.display = 'block';
+        document.getElementById('error-message').style.display = 'none';
+
+        setTimeout(() => {
+            document.getElementById('success-message').style.display = 'none';
+        }, 3000);
+
+    } catch (error) {
+        console.error('Error saving profile:', error);
+        document.getElementById('error-message').textContent = error.message || 'Error saving profile. Check console for details.';
+        document.getElementById('error-message').style.display = 'block';
+    }
+}
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'sign-in.html';
+        }
+
+        window.addEventListener('DOMContentLoaded', loadProfile);
+    </script>
+</body>
+</html>

@@ -19,6 +19,7 @@
             min-height: 100vh;
             overflow-x: hidden;
         }
+
         .background-pattern {
             position: absolute;
             top: 0;
@@ -29,6 +30,7 @@
                               radial-gradient(circle at 75% 75%, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
             pointer-events: none;
         }
+
         .register-container {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -42,10 +44,12 @@
             position: relative;
             z-index: 1;
         }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
         .logo {
             font-size: 36px;
             font-weight: bold;
@@ -53,38 +57,45 @@
             margin-bottom: 10px;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .subtitle {
             font-size: 16px;
             color: #666;
             margin-bottom: 30px;
         }
+
         .form-group {
             margin-bottom: 20px;
             text-align: left;
         }
+
         .form-group label {
             display: block;
             font-weight: 600;
             color: #003366;
             margin-bottom: 5px;
         }
+
         .form-group input {
             width: 100%;
-            padding: 12px 40px 12px 15px; /* Added right padding for icon */
+            padding: 12px 40px 12px 15px;
             border: 2px solid #ddd;
             border-radius: 10px;
             font-size: 16px;
             transition: border-color 0.3s, box-shadow 0.3s;
             box-sizing: border-box;
         }
+
         .form-group input:focus {
             border-color: #FFD700;
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
             outline: none;
         }
+
         .input-wrapper {
             position: relative;
         }
+
         .input-wrapper i {
             position: absolute;
             right: 15px;
@@ -92,11 +103,8 @@
             transform: translateY(-50%);
             color: #aaa;
             cursor: pointer;
-            transition: color 0.3s;
         }
-        .input-wrapper i:hover {
-            color: #003366;
-        }
+
         button {
             background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
             color: #003366;
@@ -110,44 +118,46 @@
             transition: transform 0.2s, box-shadow 0.2s;
             margin-top: 20px;
         }
+
         button:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(255, 215, 0, 0.4);
         }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .links {
             margin-top: 20px;
             font-size: 14px;
         }
+
         .links a {
             color: #003366;
             text-decoration: none;
             font-weight: 600;
-            transition: color 0.3s;
         }
-        .links a:hover {
-            color: #FFD700;
-        }
-        .error {
-            color: #f44336;
+
+        .error-box {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 8px;
             font-size: 14px;
-            margin-top: 10px;
+            margin-top: 15px;
             display: none;
+            border: 1px solid #ef9a9a;
         }
-        @media (max-width: 768px) {
+
+        @media (max-width: 480px) {
             .register-container {
                 padding: 30px 20px;
-                margin: 20px;
+                margin: 15px;
             }
-            .logo {
-                font-size: 28px;
-            }
-            .form-group input {
-                font-size: 14px;
-            }
-            button {
-                font-size: 16px;
-                padding: 12px 20px;
-            }
+            .logo { font-size: 28px; }
         }
     </style>
 </head>
@@ -156,31 +166,45 @@
     <div class="register-container">
         <div class="logo">📝 Attendly</div>
         <div class="subtitle">Create your account to get started</div>
+        
         <form id="register-form">
             <div class="form-group">
-                <label for="name">Full Name</label>
+                <label for="username">Full Name</label>
                 <div class="input-wrapper">
-                    <input type="text" id="name" placeholder="Enter your full name" required>
+                    <input type="text" id="username" name="username" placeholder="Enter your full name" required>
                     <i class="fas fa-user"></i>
                 </div>
             </div>
+            
             <div class="form-group">
-                <label for="email">User ID</label>
+                <label for="userId">User ID</label>
                 <div class="input-wrapper">
-                    <input type="email" id="email" placeholder="Enter your User ID" required>
-                    <i class="fas fa-envelope"></i>
+                    <input type="text" id="userId" name="userId" placeholder="Enter your User ID" required>
+                    <i class="fas fa-id-card"></i>
                 </div>
             </div>
+            
+            <div class="form-group">
+                <label for="department">Department</label>
+                <div class="input-wrapper">
+                    <input type="text" id="department" name="department" placeholder="Enter your department" required>
+                    <i class="fas fa-building"></i>
+                </div>
+            </div>
+            
             <div class="form-group">
                 <label for="password">Password</label>
                 <div class="input-wrapper">
-                    <input type="password" id="password" placeholder="Create a password" required>
+                    <input type="password" id="password" name="password" placeholder="Create a password" required>
                     <i class="fas fa-eye" id="toggle-password" onclick="togglePassword()"></i>
                 </div>
             </div>
-            <button type="submit">Register</button>
+
+            <button type="submit" id="submit-btn">Register</button>
         </form>
-        <div class="error" id="error-message"></div>
+
+        <div class="error-box" id="error-message"></div>
+
         <div class="links">
             Already have an account? <a href="sign-in.html">Sign In</a>
         </div>
@@ -192,54 +216,52 @@
             const toggleIcon = document.getElementById('toggle-password');
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
-                toggleIcon.classList.remove('fa-eye');
-                toggleIcon.classList.add('fa-eye-slash');
+                toggleIcon.classList.replace('fa-eye', 'fa-eye-slash');
             } else {
                 passwordInput.type = 'password';
-                toggleIcon.classList.remove('fa-eye-slash');
-                toggleIcon.classList.add('fa-eye');
+                toggleIcon.classList.replace('fa-eye-slash', 'fa-eye');
             }
         }
 
-        document.getElementById('register-form').addEventListener('submit', async function(e) {
+        const registerForm = document.getElementById('register-form');
+        const errorMessage = document.getElementById('error-message');
+        const submitBtn = document.getElementById('submit-btn');
+
+        registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
+            
+            errorMessage.style.display = 'none';
+            errorMessage.textContent = '';
+            
+            const username = document.getElementById('username').value.trim();
+            const userId = document.getElementById('userId').value.trim();
+            const department = document.getElementById('department').value.trim();
             const password = document.getElementById('password').value;
-            const errorMessage = document.getElementById('error-message');
 
-            // Basic validation
-            if (!name || !email || !password) {
-                errorMessage.textContent = 'Please fill in all fields.';
-                errorMessage.style.display = 'block';
-                return;
-            }
-
-            if (password.length < 6) {
-                errorMessage.textContent = 'Password must be at least 6 characters long.';
-                errorMessage.style.display = 'block';
-                return;
-            }
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Registering...';
 
             try {
-                const response = await fetch('http://localhost:5000/api/auth/register', {
+                const response = await fetch('/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, password })
+                    body: JSON.stringify({ username, userId, department, password })
                 });
 
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || 'Registration failed');
-                }
-
                 const data = await response.json();
-                alert('Registration successful! Please sign in.');
-                window.location.href = 'sign-in.html';
-            } catch (error) {
-                errorMessage.textContent = error.message;
+
+                if (response.ok) {
+                    alert('Registration successful! Please sign in.');
+                    window.location.href = 'sign-in.html';
+                } else {
+                    throw new Error(data.error || 'Registration failed');
+                }
+            } catch (err) {
+                errorMessage.textContent = err.message;
                 errorMessage.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Register';
             }
         });
     </script>

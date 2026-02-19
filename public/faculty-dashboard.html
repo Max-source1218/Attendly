@@ -13,7 +13,6 @@
             color: #333;
         }
 
-        /* Navigation */
         nav {
             background-color: #003366;
             color: white;
@@ -68,7 +67,6 @@
             border-radius: 2px;
         }
 
-        /* Main Content */
         .container {
             padding: 40px 20px;
             max-width: 1000px;
@@ -88,7 +86,6 @@
             margin-bottom: 40px;
         }
 
-        /* Stats Grid */
         .stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -125,7 +122,6 @@
             margin: 0;
         }
 
-        /* Action Buttons */
         .actions {
             display: flex;
             justify-content: center;
@@ -153,7 +149,6 @@
         .btn-secondary { background-color: #2196F3; color: white; }
         .btn-secondary:hover { background-color: #1e88e5; box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3); }
 
-        /* Responsive Mobile Menu */
         @media (max-width: 768px) {
             .menu-toggle { display: flex; }
             .nav-links {
@@ -190,6 +185,7 @@
             <li><a href="manage-subjects.html">Manage Subjects</a></li>
             <li><a href="view-attendance.html">Attendances</a></li>
             <li><a href="subject-records.html">Records</a></li>
+            <li><a href="profile.html">Profile</a></li>
             <li><a href="#" onclick="logout()" style="color: #FFD700;">Logout</a></li>
         </ul>
     </nav>
@@ -202,12 +198,12 @@
             <div class="stat-card">
                 <div style="font-size: 45px;">👥</div>
                 <h3>Your Classes</h3>
-                <p id="total-classes">3</p>
+                <p id="total-classes">0</p>
             </div>
             <div class="stat-card">
                 <div style="font-size: 45px;">📚</div>
                 <h3>Your Subjects</h3>
-                <p id="total-subjects">5</p>
+                <p id="total-subjects">0</p>
             </div>
         </div>
 
@@ -229,11 +225,32 @@
             navList.classList.toggle('active');
         });
 
-        // Current count fix
+        // Fetch actual counts from backend
         async function loadStats() {
-            // Note: Update these IDs if you connect to a real database later
-            document.getElementById('total-classes').textContent = '3'; 
-            document.getElementById('total-subjects').textContent = '5';
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Please sign in first.');
+                window.location.href = 'sign-in.html';
+                return;
+            }
+
+            try {
+                // Fetch classes count
+                const classesResponse = await fetch('/api/classes', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const classes = await classesResponse.json();
+                document.getElementById('total-classes').textContent = classes.length;
+
+                // Fetch subjects count
+                const subjectsResponse = await fetch('/api/subjects', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const subjects = await subjectsResponse.json();
+                document.getElementById('total-subjects').textContent = subjects.length;
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
         }
 
         function logout() {

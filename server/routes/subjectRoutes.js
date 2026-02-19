@@ -27,7 +27,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT /api/subjects/:id: Update subject assignments
 // PUT /api/subjects/:id: Update subject assignments and exclusions
 router.put('/:id', async (req, res) => {
   try {

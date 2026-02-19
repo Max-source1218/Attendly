@@ -12,26 +12,26 @@ const PORT = process.env.PORT || 5000
 
 app.use(bodyParser.json());
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static("public"));
 
-const verifyToken = (req, res, next) => {
-  const token = req.header('Authorization')?.replace('Bearer ', '');
-  if (!token) return res.status(401).json({ error: 'Access denied' });
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if (!token) return res.status(401).json({ error: 'Access token required' });
 
-  try {
-    const verified = jwt.verify(token, 'your_secret_key'); // Same secret key
-    req.user = verified;
+  jwt.verify(token, process.env.JWT_SECRET || 'your_secret_key', (err, user) => {
+    if (err) return res.status(403).json({ error: 'Invalid token' });
+    req.user = user; // This will have user.id (MongoDB _id)
     next();
-  } catch (err) {
-    res.status(400).json({ error: 'Invalid token' });
-  }
+  });
 };
 
 app.use("/api/auth", require('./routes/authRoutes'));
-app.use("/api/classes", verifyToken, require("./routes/classesRoutes"));
-app.use("/api/students", verifyToken, require("./routes/studentRoutes"));
-app.use("/api/subjects", verifyToken, require("./routes/subjectRoutes"));
-app.use("/api/attendance", verifyToken, require("./routes/attendanceRoutes"));
+app.use("/api/classes", authenticateToken, require("./routes/classesRoutes"));
+app.use("/api/students", authenticateToken, require("./routes/studentRoutes"));
+app.use("/api/subjects", authenticateToken, require("./routes/subjectRoutes"));
+app.use("/api/attendance", authenticateToken, require("./routes/attendanceRoutes"));
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
