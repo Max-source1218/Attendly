@@ -35,8 +35,8 @@ app.use("/api/students", authenticateToken, require("./routes/studentRoutes"));
 app.use("/api/subjects", authenticateToken, require("./routes/subjectRoutes"));
 app.use("/api/attendance", authenticateToken, require("./routes/attendanceRoutes"));
 
-// Catch-all: serve index.html for any non-API route
-app.get("*", (req, res) => {
+
+app.get("/{*path}", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "sign-in.html"));
 });
 
