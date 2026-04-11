@@ -35,9 +35,4 @@ app.use("/api/students", authenticateToken, require("./routes/studentRoutes"));
 app.use("/api/subjects", authenticateToken, require("./routes/subjectRoutes"));
 app.use("/api/attendance", authenticateToken, require("./routes/attendanceRoutes"));
 
-
-app.get("/{*path}", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "sign-in.html"));
-});
-
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
