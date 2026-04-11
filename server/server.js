@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
+const path = require("path")
 
 require("dotenv").config();
 require("./db");
@@ -14,7 +15,7 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public")));
 
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
@@ -27,6 +28,10 @@ const authenticateToken = (req, res, next) => {
     next();
   });
 };
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "sign-in.html"));
+});
 
 app.use("/api/auth", require('./routes/authRoutes'));
 app.use("/api/classes", authenticateToken, require("./routes/classesRoutes"));
